@@ -5,4 +5,5 @@
     <dimen name="settings_text_size">16sp</dimen>
     <dimen name="setting_items_padding_end">12dp</dimen>
     <dimen name="setting_items_vert_padding">21dp</dimen>
+    <dimen name="iconPadding_10dp">10dp</dimen>
 </resources>

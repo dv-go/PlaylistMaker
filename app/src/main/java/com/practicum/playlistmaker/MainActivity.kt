@@ -11,10 +11,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val button1 = findViewById<Button>(R.id.button_1)
-        val button2 = findViewById<Button>(R.id.button_2)
-        val button3 = findViewById<Button>(R.id.button_3)
-
         val button1ClickListener: View.OnClickListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
                 val displayIntent = Intent(this@MainActivity, Search::class.java)
@@ -28,10 +24,13 @@ class MainActivity : AppCompatActivity() {
                 startActivity(displayIntent)
             }
         }
-
+        val button1 = findViewById<Button>(R.id.button_1)
         button1.setOnClickListener(button1ClickListener)
+
+        val button2 = findViewById<Button>(R.id.button_2)
         button2.setOnClickListener(button2ClickListener)
 
+        val button3 = findViewById<Button>(R.id.button_3)
         button3.setOnClickListener {
             val displayIntent = Intent(this, SettingsActivity::class.java)
             startActivity(displayIntent)
