@@ -1,10 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Search">
+    android:background="@color/settings_screen_background_color"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/backButton"
+        style="@style/SettingsHeaderStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/default_size_16"
+        android:paddingTop="@dimen/default_size_14"
+        android:paddingEnd="@dimen/default_size_16"
+        android:paddingBottom="@dimen/default_size_16"
+        android:text="@string/search_header_text"
+        app:drawableStartCompat="@drawable/ic_arrowleft" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/default_size_16"
+        android:paddingEnd="@dimen/default_size_16"
+        android:layout_marginTop="@dimen/default_size_8"
+        android:layout_marginBottom="@dimen/default_size_8">
+
+        <EditText
+            android:id="@+id/searchEditText"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_size_36"
+            android:inputType="text"
+            android:hint="@string/search_hint"
+            android:maxLines="1"
+            android:textSize="@dimen/main_text_size_16"
+            android:fontFamily="@font/ys_display_regular"
+            android:textColorHint="@color/edit_text_loup_hint_clearbutton_color"
+            android:textColor="@color/edit_text_search_text_color"
+            style="@style/SearchEditTextStyle" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

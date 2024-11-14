@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
         val button1ClickListener: View.OnClickListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
-                val displayIntent = Intent(this@MainActivity, Search::class.java)
+                val displayIntent = Intent(this@MainActivity, SearchActivity::class.java)
                 startActivity(displayIntent)
             }
         }

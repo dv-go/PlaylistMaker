@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Стиль для кнопок на главном экране -->
+    <style name="MainButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/main_text_size</item>
+        <item name="android:fontFamily">@font/ys_text_medium</item>
+        <item name="android:textColor">@color/buttons_content_black</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">@dimen/iconPadding_10dp</item>
+        <item name="iconTint">@color/buttons_content_black</item>
+        <item name="cornerRadius">@dimen/default_size</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <!-- Стиль для заголовка на странице настроек -->
+    <style name="SettingsHeaderStyle">
+        <item name="android:textColor">@color/settings_content_color</item>
+        <item name="android:textSize">@dimen/main_text_size</item>
+        <item name="android:fontFamily">@font/ys_text_medium</item>
+        <item name="android:drawablePadding">24dp</item>
+    </style>
+
+    <!-- Стиль для пунктов меню -->
+    <style name="SettingsMenuItemStyle">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/settings_text_size</item>
+        <item name="android:textColor">@color/settings_content_color</item>
+    </style>
+
+    <!-- Стиль для EditText на странице поиска -->
+    <style name="SearchEditTextStyle">
+        <item name="android:paddingStart">@dimen/default_size_12</item>
+        <item name="android:paddingEnd">@dimen/default_size_16</item>
+        <item name="android:paddingTop">@dimen/default_size_8</item>
+        <item name="android:paddingBottom">@dimen/default_size_8</item>
+        <item name="android:drawablePadding">@dimen/default_size_8</item>
+        <item name="android:background">@drawable/rounded_edit_text_background</item>
+    </style>
+
+</resources>
