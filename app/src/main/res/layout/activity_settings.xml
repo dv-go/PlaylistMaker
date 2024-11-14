@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_header_text"
+        android:textColor="@color/buttons_content_black"
+        android:textSize="@dimen/main_text_size"
+        android:fontFamily="@font/yandex_sans_text_medium"
+        android:paddingTop="@dimen/default_size"
+        android:paddingBottom="@dimen/default_size"
+        android:paddingStart="@dimen/default_size"
+        android:paddingEnd="20dp"
+        android:drawablePadding="24dp"
+        app:drawableStartCompat="@drawable/ic_arrowleft" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="6dp"
+        android:paddingEnd="6dp"
+        android:paddingStart="@dimen/default_size"
+        >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/menu_first_item_name"
+            android:fontFamily="@font/yandex_sans_display_regular"
+            android:textSize="@dimen/settings_text_size"
+            android:textColor="@color/settings_items_black" />
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/switch_option"
+            android:checked="false"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/menu_second_item_name"
+        android:fontFamily="@font/yandex_sans_display_regular"
+        android:textSize="@dimen/settings_text_size"
+        android:textColor="@color/settings_items_black"
+        android:paddingVertical="@dimen/setting_items_vert_padding"
+        android:paddingEnd="@dimen/setting_items_padding_end"
+        android:paddingStart="@dimen/default_size"
+        app:drawableEndCompat="@drawable/ic_share" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/menu_third_item_name"
+        android:fontFamily="@font/yandex_sans_display_regular"
+        android:textSize="@dimen/settings_text_size"
+        android:textColor="@color/settings_items_black"
+        android:paddingVertical="@dimen/setting_items_vert_padding"
+        android:paddingEnd="@dimen/setting_items_padding_end"
+        android:paddingStart="@dimen/default_size"
+        app:drawableEndCompat="@drawable/ic_support" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/menu_fourth_item_name"
+        android:fontFamily="@font/yandex_sans_display_regular"
+        android:textSize="@dimen/settings_text_size"
+        android:textColor="@color/settings_items_black"
+        android:paddingVertical="@dimen/setting_items_vert_padding"
+        android:paddingEnd="@dimen/setting_items_padding_end"
+        android:paddingStart="@dimen/default_size"
+        app:drawableEndCompat="@drawable/ic_arrow" />
+
+
+</LinearLayout>
