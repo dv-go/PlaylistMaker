@@ -9,4 +9,14 @@
     <string name="menu_second_item_name">Поделиться приложением</string>
     <string name="menu_third_item_name">Написать в поддержку</string>
     <string name="menu_fourth_item_name">Пользовательское соглашение</string>
+    <string name="share_button_text">Поделиться ссылкой через</string>
+    <string name="support_email">student_email@example.com</string>
+    <string name="email_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="email_body">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="no_email_client">Почтовый клиент не найден</string>
+    <string name="user_agreement_url">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="support_button_text">Выберите почтовое приложение</string>
+    <string name="search_header_text">Поиск</string>
+    <string name="search_hint">Поиск</string>
+    <string name="clear_icon_description">Очистить поле поиска</string>
 </resources>
