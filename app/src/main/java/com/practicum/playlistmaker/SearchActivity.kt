@@ -7,8 +7,8 @@ import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 
 class SearchActivity : AppCompatActivity() {
@@ -20,8 +20,8 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val backButton = findViewById<TextView>(R.id.backButton)
-        backButton.setOnClickListener {
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar.setNavigationOnClickListener {
             finish()
         }
 

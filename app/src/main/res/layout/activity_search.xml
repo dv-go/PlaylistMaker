@@ -5,26 +5,23 @@
     android:background="@color/settings_screen_background_color"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/backButton"
-        style="@style/SettingsHeaderStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingStart="@dimen/default_size_16"
-        android:paddingTop="@dimen/default_size_14"
-        android:paddingEnd="@dimen/default_size_16"
-        android:paddingBottom="@dimen/default_size_16"
-        android:text="@string/search_header_text"
-        app:drawableStartCompat="@drawable/ic_arrowleft" />
-
-    <LinearLayout
+    <!-- Toolbar Заголовок -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/default_size_16"
-        android:paddingEnd="@dimen/default_size_16"
+        app:title="@string/search_header_text"
+        app:navigationIcon="@drawable/ic_arrowleft"
+        style="@style/ToolbarStyle" />
+
+    <!-- Контейнер для поиска -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_size_8"
-        android:layout_marginBottom="@dimen/default_size_8">
+        android:layout_marginBottom="@dimen/default_size_8"
+        android:paddingStart="@dimen/default_size_16"
+        android:paddingEnd="@dimen/default_size_16">
 
         <EditText
             android:id="@+id/searchEditText"
@@ -37,9 +34,9 @@
             android:fontFamily="@font/ys_display_regular"
             android:textColorHint="@color/edit_text_loup_hint_clearbutton_color"
             android:textColor="@color/edit_text_search_text_color"
+            android:textCursorDrawable="@drawable/cursor_color"
             style="@style/SearchEditTextStyle" />
 
-
-    </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>

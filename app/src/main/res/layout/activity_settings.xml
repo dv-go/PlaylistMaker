@@ -2,85 +2,61 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/settings_screen_background_color"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="0dp">
 
-    <!-- Заголовок -->
-    <TextView
-        android:id="@+id/backButton"
-        style="@style/SettingsHeaderStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/default_size"
-        android:paddingBottom="@dimen/default_size"
-        android:paddingStart="@dimen/default_size"
-        android:paddingEnd="20dp"
-        android:text="@string/settings_header_text"
-        app:drawableStartCompat="@drawable/ic_arrowleft" />
-
-    <!-- Первая строка с Switch -->
-    <LinearLayout
-        android:id="@+id/settings_item_1"
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingVertical="6dp"
-        android:paddingStart="@dimen/default_size"
-        android:paddingEnd="6dp">
+        app:title="@string/settings_header_text"
+        app:navigationIcon="@drawable/ic_arrowleft"
+        style="@style/ToolbarStyle" />
 
-        <TextView
-            android:id="@+id/menu_first_item"
-            style="@style/SettingsMenuItemStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/menu_first_item_name" />
-
-        <Switch
-            android:id="@+id/switch_option"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
-    </LinearLayout>
+    <!-- Свичер -->
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switch_option"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/menu_first_item_name"
+        style="@style/CustomSwitchMaterialStyle" />
 
     <!-- Второй пункт меню -->
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/settings_item_2"
-        style="@style/SettingsMenuItemStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="@dimen/setting_items_vert_padding"
         android:paddingStart="@dimen/default_size"
         android:paddingEnd="@dimen/setting_items_padding_end"
         android:text="@string/menu_second_item_name"
-        app:drawableEndCompat="@drawable/ic_share" />
+        app:drawableEndCompat="@drawable/ic_share"
+        style="@style/SettingsMenuItemStyle" />
 
     <!-- Третий пункт меню -->
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/settings_item_3"
-        style="@style/SettingsMenuItemStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="@dimen/setting_items_vert_padding"
         android:paddingStart="@dimen/default_size"
         android:paddingEnd="@dimen/setting_items_padding_end"
         android:text="@string/menu_third_item_name"
-        app:drawableEndCompat="@drawable/ic_support" />
+        app:drawableEndCompat="@drawable/ic_support"
+        style="@style/SettingsMenuItemStyle" />
 
-    <!-- Четвёртый пункт меню -->
-    <TextView
+    <!-- Четвертый пункт меню -->
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/settings_item_4"
-        style="@style/SettingsMenuItemStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="@dimen/setting_items_vert_padding"
         android:paddingStart="@dimen/default_size"
         android:paddingEnd="@dimen/setting_items_padding_end"
         android:text="@string/menu_fourth_item_name"
-        app:drawableEndCompat="@drawable/ic_arrow" />
+        app:drawableEndCompat="@drawable/ic_arrow"
+        style="@style/SettingsMenuItemStyle" />
 
 </LinearLayout>
