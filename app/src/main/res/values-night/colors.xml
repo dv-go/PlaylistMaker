@@ -13,6 +13,6 @@
     <color name="edit_text_search_text_color">#1A1B22</color>
     <color name="switch_thumb_on_color">#3772E7</color>
     <color name="switch_thumb_off_color">#3772E7</color>
-    <color name="switch_track_on_color">#9FBBF3</color>
-    <color name="switch_track_off_color">#9FBBF3</color>
+    <color name="switch_track_on_color">#7A9FBBF3</color>
+    <color name="switch_track_off_color">#7A9FBBF3</color>
 </resources>

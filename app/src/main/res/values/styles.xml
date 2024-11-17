@@ -35,6 +35,7 @@
 
     <!-- Стиль для пунктов меню -->
     <style name="SettingsMenuItemStyle" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:gravity">center_vertical</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textSize">@dimen/settings_text_size</item>
         <item name="android:textColor">@color/settings_content_color</item>

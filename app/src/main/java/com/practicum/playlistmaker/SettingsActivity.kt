@@ -46,22 +46,13 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun openEmailClient() {
-        val email = getString(R.string.support_email)
-        val subject = Uri.encode(getString(R.string.email_subject))
-        val body = Uri.encode(getString(R.string.email_body))
-
-        val mailtoUri = Uri.parse("mailto:$email?subject=$subject&body=$body")
-
-        // Явный интент для открытия почтового клиента
-        val intent = Intent(Intent.ACTION_SENDTO).apply {
-            data = mailtoUri
+        val supportIntent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:")
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.support_email)))
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject))
+            putExtra(Intent.EXTRA_TEXT, getString(R.string.email_body))
         }
-
-        if (intent.resolveActivity(packageManager) != null) {
-            startActivity(intent)
-        } else {
-            Toast.makeText(this, getString(R.string.no_email_client), Toast.LENGTH_SHORT).show()
-        }
+        startActivity(supportIntent)
     }
 
 

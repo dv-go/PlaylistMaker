@@ -19,7 +19,8 @@
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch_option"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/default_size_61"
+        android:layout_marginTop="@dimen/default_size_24"
         android:text="@string/menu_first_item_name"
         style="@style/CustomSwitchMaterialStyle" />
 
@@ -27,8 +28,7 @@
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/settings_item_2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/setting_items_vert_padding"
+        android:layout_height="@dimen/default_size_61"
         android:paddingStart="@dimen/default_size"
         android:paddingEnd="@dimen/setting_items_padding_end"
         android:text="@string/menu_second_item_name"
@@ -39,8 +39,7 @@
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/settings_item_3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/setting_items_vert_padding"
+        android:layout_height="@dimen/default_size_61"
         android:paddingStart="@dimen/default_size"
         android:paddingEnd="@dimen/setting_items_padding_end"
         android:text="@string/menu_third_item_name"
@@ -51,8 +50,7 @@
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/settings_item_4"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/setting_items_vert_padding"
+        android:layout_height="@dimen/default_size_61"
         android:paddingStart="@dimen/default_size"
         android:paddingEnd="@dimen/setting_items_padding_end"
         android:text="@string/menu_fourth_item_name"
