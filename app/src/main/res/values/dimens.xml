@@ -15,4 +15,6 @@
     <dimen name="default_size_48">48dp</dimen>
     <dimen name="default_size_61">61dp</dimen>
     <dimen name="default_size_24">24dp</dimen>
+    <dimen name="default_size_20">20dp</dimen>
+    <dimen name="default_size_18">18dp</dimen>
 </resources>

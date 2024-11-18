@@ -5,7 +5,7 @@
         <item name="android:background">@color/settings_screen_background_color</item>
         <item name="titleTextAppearance">@style/SettingsHeaderStyle</item>
         <item name="android:elevation">0dp</item>
-        <item name="android:layout_height">56dp</item> <!-- стандартная высота для AppBar -->
+        <item name="android:layout_height">56dp</item>
     </style>
 
     <!-- Стиль для заголовка текста Toolbar -->
@@ -39,28 +39,22 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textSize">@dimen/settings_text_size</item>
         <item name="android:textColor">@color/settings_content_color</item>
-        <item name="android:drawablePadding">16dp</item>
-        <item name="android:paddingVertical">12dp</item>
+        <item name="android:drawablePadding">@dimen/default_size_16</item>
+        <item name="android:paddingVertical">@dimen/default_size_12</item>
     </style>
-
 
     <!-- Общий стиль для SwitchMaterial -->
     <style name="CustomSwitchMaterialStyle" parent="Widget.MaterialComponents.CompoundButton.Switch">
         <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingHorizontal">@dimen/default_size</item>
-        <item name="android:paddingVertical">12dp</item>
+        <item name="android:paddingVertical">@dimen/default_size_12</item>
         <item name="android:textSize">@dimen/settings_text_size</item>
         <item name="trackTint">@color/switch_track_color</item>
         <item name="thumbTint">@color/switch_thumb_color</item>
         <item name="iconTint">@color/settings_content_color</item>
     </style>
 
-
-
     <!-- Стиль для EditText на странице поиска -->
     <style name="SearchEditTextStyle" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
-        <item name="android:paddingStart">@dimen/default_size_12</item>
-        <item name="android:paddingEnd">@dimen/default_size_16</item>
         <item name="android:paddingTop">@dimen/default_size_8</item>
         <item name="android:paddingBottom">@dimen/default_size_8</item>
         <item name="android:drawablePadding">@dimen/default_size_8</item>

@@ -21,6 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_size_61"
         android:layout_marginTop="@dimen/default_size_24"
+        android:paddingEnd="@dimen/default_size_18"
+        android:paddingStart="@dimen/default_size_16"
         android:text="@string/menu_first_item_name"
         style="@style/CustomSwitchMaterialStyle" />
 
@@ -29,8 +31,8 @@
         android:id="@+id/settings_item_2"
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_size_61"
-        android:paddingStart="@dimen/default_size"
-        android:paddingEnd="@dimen/setting_items_padding_end"
+        android:paddingEnd="@dimen/default_size_16"
+        android:paddingStart="@dimen/default_size_16"
         android:text="@string/menu_second_item_name"
         app:drawableEndCompat="@drawable/ic_share"
         style="@style/SettingsMenuItemStyle" />
@@ -40,8 +42,8 @@
         android:id="@+id/settings_item_3"
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_size_61"
-        android:paddingStart="@dimen/default_size"
-        android:paddingEnd="@dimen/setting_items_padding_end"
+        android:paddingEnd="@dimen/default_size_14"
+        android:paddingStart="@dimen/default_size_16"
         android:text="@string/menu_third_item_name"
         app:drawableEndCompat="@drawable/ic_support"
         style="@style/SettingsMenuItemStyle" />
@@ -51,8 +53,8 @@
         android:id="@+id/settings_item_4"
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_size_61"
-        android:paddingStart="@dimen/default_size"
-        android:paddingEnd="@dimen/setting_items_padding_end"
+        android:paddingEnd="@dimen/default_size_20"
+        android:paddingStart="@dimen/default_size_16"
         android:text="@string/menu_fourth_item_name"
         app:drawableEndCompat="@drawable/ic_arrow"
         style="@style/SettingsMenuItemStyle" />
