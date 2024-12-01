@@ -4,6 +4,17 @@
     <dimen name="main_text_size">22sp</dimen>
     <dimen name="settings_text_size">16sp</dimen>
     <dimen name="setting_items_padding_end">12dp</dimen>
-    <dimen name="setting_items_vert_padding">21dp</dimen>
+    <dimen name="setting_items_vert_padding">16dp</dimen>
     <dimen name="iconPadding_10dp">10dp</dimen>
+    <dimen name="default_size_14">14dp</dimen>
+    <dimen name="default_size_16">16dp</dimen>
+    <dimen name="default_size_12">12dp</dimen>
+    <dimen name="default_size_8">8dp</dimen>
+    <dimen name="default_size_36">36dp</dimen>
+    <dimen name="main_text_size_16">16sp</dimen>
+    <dimen name="default_size_48">48dp</dimen>
+    <dimen name="default_size_61">61dp</dimen>
+    <dimen name="default_size_24">24dp</dimen>
+    <dimen name="default_size_20">20dp</dimen>
+    <dimen name="default_size_18">18dp</dimen>
 </resources>

@@ -1,94 +1,62 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/settings_screen_background_color"
     android:orientation="vertical"
-    >
+    android:padding="0dp">
 
-    <TextView
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_header_text"
-        android:textColor="@color/buttons_content_black"
-        android:textSize="@dimen/main_text_size"
-        android:fontFamily="@font/yandex_sans_text_medium"
-        android:paddingTop="@dimen/default_size"
-        android:paddingBottom="@dimen/default_size"
-        android:paddingStart="@dimen/default_size"
-        android:paddingEnd="20dp"
-        android:drawablePadding="24dp"
-        app:drawableStartCompat="@drawable/ic_arrowleft" />
-
-    <LinearLayout
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingVertical="6dp"
-        android:paddingEnd="6dp"
-        android:paddingStart="@dimen/default_size"
-        >
+        app:title="@string/settings_header_text"
+        app:navigationIcon="@drawable/ic_arrowleft"
+        style="@style/ToolbarStyle" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/menu_first_item_name"
-            android:fontFamily="@font/yandex_sans_display_regular"
-            android:textSize="@dimen/settings_text_size"
-            android:textColor="@color/settings_items_black" />
-
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/switch_option"
-            android:checked="false"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-    </LinearLayout>
-
-    <TextView
+    <!-- Свичер -->
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switch_option"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/default_size_61"
+        android:layout_marginTop="@dimen/default_size_24"
+        android:paddingEnd="@dimen/default_size_18"
+        android:paddingStart="@dimen/default_size_16"
+        android:text="@string/menu_first_item_name"
+        style="@style/CustomSwitchMaterialStyle" />
+
+    <!-- Второй пункт меню -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/settings_item_2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_size_61"
+        android:paddingEnd="@dimen/default_size_16"
+        android:paddingStart="@dimen/default_size_16"
         android:text="@string/menu_second_item_name"
-        android:fontFamily="@font/yandex_sans_display_regular"
-        android:textSize="@dimen/settings_text_size"
-        android:textColor="@color/settings_items_black"
-        android:paddingVertical="@dimen/setting_items_vert_padding"
-        android:paddingEnd="@dimen/setting_items_padding_end"
-        android:paddingStart="@dimen/default_size"
-        app:drawableEndCompat="@drawable/ic_share" />
+        app:drawableEndCompat="@drawable/ic_share"
+        style="@style/SettingsMenuItemStyle" />
 
-
-    <TextView
+    <!-- Третий пункт меню -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/settings_item_3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/default_size_61"
+        android:paddingEnd="@dimen/default_size_14"
+        android:paddingStart="@dimen/default_size_16"
         android:text="@string/menu_third_item_name"
-        android:fontFamily="@font/yandex_sans_display_regular"
-        android:textSize="@dimen/settings_text_size"
-        android:textColor="@color/settings_items_black"
-        android:paddingVertical="@dimen/setting_items_vert_padding"
-        android:paddingEnd="@dimen/setting_items_padding_end"
-        android:paddingStart="@dimen/default_size"
-        app:drawableEndCompat="@drawable/ic_support" />
+        app:drawableEndCompat="@drawable/ic_support"
+        style="@style/SettingsMenuItemStyle" />
 
-    <TextView
+    <!-- Четвертый пункт меню -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/settings_item_4"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/default_size_61"
+        android:paddingEnd="@dimen/default_size_20"
+        android:paddingStart="@dimen/default_size_16"
         android:text="@string/menu_fourth_item_name"
-        android:fontFamily="@font/yandex_sans_display_regular"
-        android:textSize="@dimen/settings_text_size"
-        android:textColor="@color/settings_items_black"
-        android:paddingVertical="@dimen/setting_items_vert_padding"
-        android:paddingEnd="@dimen/setting_items_padding_end"
-        android:paddingStart="@dimen/default_size"
-        app:drawableEndCompat="@drawable/ic_arrow" />
-
+        app:drawableEndCompat="@drawable/ic_arrow"
+        style="@style/SettingsMenuItemStyle" />
 
 </LinearLayout>
