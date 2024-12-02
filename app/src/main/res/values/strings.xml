@@ -19,4 +19,9 @@
     <string name="search_header_text">Поиск</string>
     <string name="search_hint">Поиск</string>
     <string name="clear_icon_description">Очистить поле поиска</string>
+    <string name="arrow_description">Стрелка направо</string>
+    <string name="image_description">Изображение альбома</string>
+    <string name="album_name">Yesterday (Remastered 2009)</string>
+    <string name="group_name">The Beatles</string>
+    <string name="track_length">2:55</string>
 </resources>
