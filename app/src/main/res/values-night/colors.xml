@@ -15,4 +15,7 @@
     <color name="switch_thumb_off_color">#AEAFB4</color>
     <color name="switch_track_on_color">#7A9FBBF3</color>
     <color name="switch_track_off_color">#E6E8EB</color>
+    <color name="searched_album_name_color">#FFFFFF</color>
+    <color name="searched_meta_content_color">#FFFFFF</color>
+    <color name="searched_item_background_color">#1A1B22</color>
 </resources>

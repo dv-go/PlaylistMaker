@@ -17,4 +17,10 @@
     <dimen name="default_size_24">24dp</dimen>
     <dimen name="default_size_20">20dp</dimen>
     <dimen name="default_size_18">18dp</dimen>
+    <dimen name="default_size_45">45dp</dimen>
+    <dimen name="default_size_13">13dp</dimen>
+    <dimen name="default_text_size_16">16sp</dimen>
+    <dimen name="default_text_size_1875">18.75sp</dimen>
+    <dimen name="default_text_size_11">11sp</dimen>
+    <dimen name="default_text_size_1289">12.89sp</dimen>
 </resources>

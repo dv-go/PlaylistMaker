@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@color/searched_item_background_color">
+
+    <!-- Изображение слева -->
+    <ImageView
+        android:id="@+id/artworkImage"
+        android:layout_width="@dimen/default_size_45"
+        android:layout_height="@dimen/default_size_45"
+        android:layout_marginStart="@dimen/default_size_13"
+        android:layout_marginEnd="@dimen/default_size_8"
+        android:layout_marginVertical="@dimen/default_size_8"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@string/image_description" />
+
+    <!-- Вертикальный блок с двумя текстовыми элементами -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/trackName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/album_name"
+            android:textAlignment="viewStart"
+            android:fontFamily="@font/ys_display_regular"
+            android:textSize="@dimen/default_text_size_16"
+            android:textStyle="normal"
+            android:lineHeight="@dimen/default_text_size_1875"
+            android:textColor="@color/searched_album_name_color"
+            android:maxLines="1"
+            android:ellipsize="end"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Название группы -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/artistName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/group_name"
+                android:textAlignment="viewStart"
+                android:fontFamily="@font/ys_display_regular"
+                android:textSize="@dimen/default_text_size_11"
+                android:textStyle="normal"
+                android:lineHeight="@dimen/default_text_size_1289"
+                android:textColor="@color/searched_meta_content_color"
+                android:maxLines="1"
+                android:ellipsize="end"
+                />
+
+            <!-- Иконка-разделитель (жирная точка) с использованием изображения -->
+            <ImageView
+                android:id="@+id/dot_separator"
+                android:layout_width="@dimen/default_size_13"
+                android:layout_height="@dimen/default_size_13"
+                android:src="@drawable/ic_dot_separator"
+                app:tint="@color/searched_meta_content_color"
+                />
+
+            <!-- Длина трека -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/trackTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/track_length"
+                android:textAlignment="viewStart"
+                android:fontFamily="@font/ys_display_regular"
+                android:textSize="@dimen/default_text_size_11"
+                android:textStyle="normal"
+                android:lineHeight="@dimen/default_text_size_1289"
+                android:textColor="@color/searched_meta_content_color"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Стрелка справа -->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_arrow"
+        android:layout_marginEnd="@dimen/default_size_20"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@string/arrow_description"
+        app:tint="@color/searched_meta_content_color"/>
+</LinearLayout>
