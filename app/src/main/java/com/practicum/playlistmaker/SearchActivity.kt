@@ -5,28 +5,64 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MotionEvent
+import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class SearchActivity : AppCompatActivity() {
 
-    private lateinit var inputEditText: EditText
+    private val APIBaseULR: String = "https://itunes.apple.com"
     private var searchText: String = ""
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(APIBaseULR)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    private val trackServise = retrofit.create(ITunesSearchAPI::class.java)
+
+    private val trackList = ArrayList<Track>()
+    private val adapter = TracksAdapter()
+
+    private lateinit var inputEditText: EditText
+    private lateinit var placeholderMessage: TextView
+    private lateinit var placeholderImage: ImageView
+    private lateinit var refreshButton: Button
+    private lateinit var trackListView: RecyclerView
+    private lateinit var toolbar:Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        inputEditText = findViewById(R.id.searchEditText)
+        placeholderMessage = findViewById(R.id.placeholderMessage)
+        placeholderImage = findViewById(R.id.placeholderImage)
+        refreshButton = findViewById(R.id.refreshButton)
+        refreshButton.visibility = View.GONE
+        trackListView = findViewById(R.id.recyclerView)
+        toolbar = findViewById(R.id.toolbar)
         toolbar.setNavigationOnClickListener {
             finish()
         }
 
-        inputEditText = findViewById(R.id.searchEditText)
+        adapter.tracksList = trackList
+        trackListView.adapter = adapter
 
         if (savedInstanceState != null) {
             searchText = savedInstanceState.getString("SEARCH_TEXT", "")
@@ -52,113 +88,35 @@ class SearchActivity : AppCompatActivity() {
                     inputEditText.setText("")
                     hideKeyboard()
                     setClearButtonVisibility(false)
+                    trackList.clear()
+                    placeholderMessage.visibility = View.GONE
+                    placeholderImage.visibility = View.GONE
+                    refreshButton.visibility = View.GONE
+                    adapter.notifyDataSetChanged()
                     inputEditText.performClick()
                     true
                 } else false
             } else false
         }
 
-        val tracks = listOf(
-            Track(
-                trackName = "Smells Like Teen Spirit Smells Like Teen Spirit Smells Like Teen Spirit Smells Like Teen Spirit",
-                artistName = "Nirvana",
-                trackTime = "5:01",
-                artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Billie Jean",
-                artistName = "Michael Jackson",
-                trackTime = "4:35",
-                artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Stayin' Alive",
-                artistName = "Bee Gees",
-                trackTime = "4:10",
-                artworkUrl100 = "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Whole Lotta Love",
-                artistName = "Led Zeppelin",
-                trackTime = "5:33",
-                artworkUrl100 = "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Sweet Child O'Mine",
-                artistName = "Guns N' Roses",
-                trackTime = "5:03",
-                artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Smells Like Teen Spirit",
-                artistName = "Nirvana",
-                trackTime = "5:01",
-                artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Billie Jean",
-                artistName = "Michael Jackson",
-                trackTime = "4:35",
-                artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Stayin' Alive",
-                artistName = "Bee Gees",
-                trackTime = "4:10",
-                artworkUrl100 = "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Whole Lotta Love",
-                artistName = "Led Zeppelin",
-                trackTime = "5:33",
-                artworkUrl100 = "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Sweet Child O'Mine",
-                artistName = "Guns N' Roses",
-                trackTime = "5:03",
-                artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Smells Like Teen Spirit",
-                artistName = "Nirvana",
-                trackTime = "5:01",
-                artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Billie Jean",
-                artistName = "Michael Jackson",
-                trackTime = "4:35",
-                artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Stayin' Alive",
-                artistName = "Bee Gees",
-                trackTime = "4:10",
-                artworkUrl100 = "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Whole Lotta Love",
-                artistName = "Led Zeppelin",
-                trackTime = "5:33",
-                artworkUrl100 = "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Sweet Child O'Mine",
-                artistName = "Guns N' Roses",
-                trackTime = "5:03",
-                artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg"
-            )
-        )
+        inputEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                search()
+                true
+            }
+            false
+        }
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.adapter = TracksAdapter(tracks)
+        refreshButton.setOnClickListener{
+            search()
+        }
 
     }
 
     private fun setClearButtonVisibility(visible: Boolean) {
         val searchIcon = ContextCompat.getDrawable(this, R.drawable.ic_search_loup)
-        val clearIcon = if (visible) ContextCompat.getDrawable(this, R.drawable.ic_clear_button) else null
+        val clearIcon =
+            if (visible) ContextCompat.getDrawable(this, R.drawable.ic_clear_button) else null
         inputEditText.setCompoundDrawablesWithIntrinsicBounds(searchIcon, null, clearIcon, null)
     }
 
@@ -180,4 +138,73 @@ class SearchActivity : AppCompatActivity() {
             imm.hideSoftInputFromWindow(it.windowToken, 0)
         }
     }
+
+    private fun showMessage(text: String) {
+        if (text.isNotEmpty()) {
+            placeholderMessage.visibility = View.VISIBLE
+            placeholderImage.visibility = View.VISIBLE
+            placeholderMessage.text = text
+            when (text) {
+                getString(R.string.nothing_found) -> placeholderImage.setImageResource(R.drawable.nothing_found)
+                getString(R.string.something_went_wrong) -> {
+                    placeholderImage.setImageResource(R.drawable.no_connection)
+                    refreshButton.visibility = View.VISIBLE
+                }
+            }
+            trackList.clear()
+            adapter.notifyDataSetChanged()
+        } else {
+            placeholderMessage.visibility = View.GONE
+            placeholderImage.visibility = View.GONE
+            refreshButton.visibility = View.GONE
+        }
+    }
+
+
+    fun formatTrackDuration(durationMs: String): String {
+        return try {
+            val durationLong = durationMs.toLong() // Преобразуем строку в Long
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(durationLong)
+        } catch (e: NumberFormatException) {
+            "00:00" // Возвращаем значение по умолчанию в случае ошибки
+        }
+    }
+
+
+    private fun search(){
+        placeholderMessage.visibility = View.GONE
+        placeholderImage.visibility = View.GONE
+        refreshButton.visibility = View.GONE
+
+        trackServise.search(searchText)
+            .enqueue(object : Callback<TrackResponse>{
+                override fun onResponse(
+                    call: Call<TrackResponse>,
+                    response: Response<TrackResponse>
+                ) {
+                    when (response.code()){
+                        200 -> {
+                            if(response.body()?.results?.isNotEmpty() == true){
+                                trackList.clear()
+                                response.body()?.results?.forEach { track ->
+                                    track.trackTimeMillis = formatTrackDuration(track.trackTimeMillis)
+                                }
+                                trackList.addAll(response.body()?.results!!)
+                                adapter.notifyDataSetChanged()
+                            } else {
+                                showMessage(getString(R.string.nothing_found))
+                            }
+                        }
+                        else -> showMessage(getString(R.string.something_went_wrong))
+                    }
+                }
+
+                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                    showMessage(getString(R.string.something_went_wrong))
+                }
+            })
+    }
+
 }
+
+

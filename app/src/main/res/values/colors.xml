@@ -19,4 +19,5 @@
     <color name="searched_album_name_color">#000000</color>
     <color name="searched_meta_content_color">#AEAFB4</color>
     <color name="searched_item_background_color">#FFFFFF</color>
+    <color name="placeholderMessage_color">#1A1B22</color>
 </resources>
