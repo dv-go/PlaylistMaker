@@ -23,4 +23,7 @@
     <dimen name="default_text_size_1875">18.75sp</dimen>
     <dimen name="default_text_size_11">11sp</dimen>
     <dimen name="default_text_size_1289">12.89sp</dimen>
+    <dimen name="default_text_size_2227">22.27sp</dimen>
+    <dimen name="default_size_120">120dp</dimen>
+    <dimen name="default_size_91">91dp</dimen>
 </resources>

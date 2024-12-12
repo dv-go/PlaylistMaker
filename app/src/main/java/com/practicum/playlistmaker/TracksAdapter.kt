@@ -3,9 +3,9 @@ package com.practicum.playlistmaker
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class TracksAdapter(
-    private val tracksList: List<Track>
-): RecyclerView.Adapter<TracksViewHolder> () {
+class TracksAdapter: RecyclerView.Adapter<TracksViewHolder> () {
+
+    var tracksList =  ArrayList<Track>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TracksViewHolder {
         return TracksViewHolder(parent)

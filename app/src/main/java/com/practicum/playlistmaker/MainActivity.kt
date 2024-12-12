@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(displayIntent)
             }
         }
+
         val button1 = findViewById<Button>(R.id.button_1)
         button1.setOnClickListener(button1ClickListener)
 
