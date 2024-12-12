@@ -46,6 +46,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var trackListView: RecyclerView
     private lateinit var toolbar:Toolbar
 
+    companion object { private const val DEFAULT_TIME_STRING = "00:00" }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -163,12 +165,13 @@ class SearchActivity : AppCompatActivity() {
 
     fun formatTrackDuration(durationMs: String): String {
         return try {
-            val durationLong = durationMs.toLong() // Преобразуем строку в Long
+            val durationLong = durationMs.toLong()
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(durationLong)
         } catch (e: NumberFormatException) {
-            "00:00" // Возвращаем значение по умолчанию в случае ошибки
+            DEFAULT_TIME_STRING
         }
     }
+
 
 
     private fun search(){
