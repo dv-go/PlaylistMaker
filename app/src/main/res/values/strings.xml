@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Плейлист</string>
+    <string name="app_name">Playlist maker</string>
     <string name="main_name">Playlist maker</string>
     <string name="first_button_text">Поиск</string>
     <string name="second_button_text">Медиатека</string>
@@ -26,4 +26,5 @@
     <string name="track_length">2:55</string>
     <string name="nothing_found">Ничего не нашлось</string>
     <string name="something_went_wrong">Проблемы со связью.\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="yourHistoryMessage">Вы искали</string>
 </resources>

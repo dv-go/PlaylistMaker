@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +31,16 @@ class SettingsActivity : AppCompatActivity() {
         val agreementButton = findViewById<TextView>(R.id.settings_item_4)
         agreementButton.setOnClickListener {
             openUserAgreement()
+        }
+
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.switch_option)
+
+        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
+        val isDarkThemeEnabled = sharedPrefs.getBoolean(THEME_KEY, false)
+        themeSwitcher.isChecked = isDarkThemeEnabled
+
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
         }
     }
 
