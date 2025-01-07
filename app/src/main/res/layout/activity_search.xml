@@ -48,8 +48,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingStart="@dimen/default_size_16"
-        android:paddingEnd="@dimen/default_size_16">
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp">
 
         <!-- Сообщение "Вы искали" -->
         <TextView

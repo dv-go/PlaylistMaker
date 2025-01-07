@@ -139,6 +139,7 @@ class SearchActivity : AppCompatActivity() {
                 setClearButtonVisibility(searchText.isNotEmpty())
 
                 if (searchText.isEmpty() && inputEditText.hasFocus()) {
+                    hidePlaceholders()
                     showHistoryUI(true)
                     updateHistory()
                 } else {
