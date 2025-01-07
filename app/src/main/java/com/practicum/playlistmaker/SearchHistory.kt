@@ -21,7 +21,7 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
         currentHistory.removeAll { it.trackId == track.trackId }
         currentHistory.add(0, track)
         if (currentHistory.size > MAX_HISTORY_SIZE) {
-            currentHistory.removeLast()
+            currentHistory.removeAt(currentHistory.lastIndex)
         }
         saveHistory(currentHistory)
     }

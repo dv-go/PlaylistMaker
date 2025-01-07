@@ -27,16 +27,10 @@ import java.util.Locale
 
 class SearchActivity : AppCompatActivity() {
 
-    private val APIBaseULR: String = "https://itunes.apple.com"
     private var searchText: String = ""
     private val trackList = ArrayList<Track>()
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(APIBaseULR)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val trackServise = retrofit.create(ITunesSearchAPI::class.java)
+    private val trackServise = RetrofitClient.instance.create(ITunesSearchAPI::class.java)
 
     private val adapter = TracksAdapter { track ->
         searchHistory.saveToHistory(track)

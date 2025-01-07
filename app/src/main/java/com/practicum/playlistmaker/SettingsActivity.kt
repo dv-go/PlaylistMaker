@@ -13,6 +13,15 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
+        val app = applicationContext as App
+        val isDarkThemeEnabled = app.darkTheme
+
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.switch_option)
+        themeSwitcher.isChecked = isDarkThemeEnabled
+        themeSwitcher.setOnCheckedChangeListener { _, checked ->
+            app.switchTheme(checked)
+        }
+
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.setNavigationOnClickListener {
             finish()
@@ -31,16 +40,6 @@ class SettingsActivity : AppCompatActivity() {
         val agreementButton = findViewById<TextView>(R.id.settings_item_4)
         agreementButton.setOnClickListener {
             openUserAgreement()
-        }
-
-        val themeSwitcher = findViewById<SwitchMaterial>(R.id.switch_option)
-
-        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
-        val isDarkThemeEnabled = sharedPrefs.getBoolean(THEME_KEY, false)
-        themeSwitcher.isChecked = isDarkThemeEnabled
-
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as App).switchTheme(checked)
         }
     }
 
