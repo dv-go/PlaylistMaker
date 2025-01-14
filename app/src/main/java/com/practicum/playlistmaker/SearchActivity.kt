@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -20,8 +21,6 @@ import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -34,8 +33,19 @@ class SearchActivity : AppCompatActivity() {
 
     private val adapter = TracksAdapter { track ->
         searchHistory.saveToHistory(track)
-        Toast.makeText(this, "Трек добавлен в историю: ${track.trackName}", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, MediaActivity::class.java).apply {
+            putExtra("TRACK_NAME", track.trackName)
+            putExtra("ARTIST_NAME", track.artistName)
+            putExtra("TRACK_DURATION", track.trackTimeMillis)
+            putExtra("ARTWORK_URL", track.artworkUrl100)
+            putExtra("RELEASE_DATE", track.releaseDate)
+            putExtra("GENRE_NAME", track.primaryGenreName)
+            putExtra("COUNTRY", track.country)
+        }
+        startActivity(intent)
+
     }
+
 
     private lateinit var inputEditText: EditText
     private lateinit var placeholderMessage: TextView
