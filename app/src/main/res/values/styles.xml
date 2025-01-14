@@ -80,6 +80,11 @@
         <item name="android:padding">9dp</item>
     </style>
 
+    <style name="RoundedImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
     <color name="search_refresh_button_textcolor">#FFFFFF</color>
     <color name="search_refresh_button_background">#1A1B22</color>
 </resources>
