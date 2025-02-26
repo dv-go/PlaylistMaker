@@ -63,7 +63,6 @@
             android:textSize="19sp"
             android:textColor="@color/yourHistoryMessage" />
 
-
         <!-- RecyclerView для истории -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -89,6 +88,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:visibility="gone"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/progress_bar_color"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="248dp"/>
 
         <!-- Placeholder Image -->
         <ImageView
