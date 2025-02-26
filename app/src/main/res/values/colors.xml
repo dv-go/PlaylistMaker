@@ -25,4 +25,5 @@
     <color name="yourHistoryMessage">#1A1B22</color>
     <color name="play_button">#1A1B22</color>
     <color name="add_and_like_buttons_color">#401A1B22</color>
+    <color name="progress_bar_color">#3772E7</color>
 </resources>

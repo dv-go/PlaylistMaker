@@ -27,4 +27,16 @@
     <string name="nothing_found">Ничего не нашлось</string>
     <string name="something_went_wrong">Проблемы со связью.\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
     <string name="yourHistoryMessage">Вы искали</string>
+    <string name="clear_history">Очистить историю</string>
+    <string name="Refresh">Обновить</string>
+    <string name="default_time">0:00</string>
+    <string name="duration">Длительность</string>
+    <string name="duration_5_35">5:35</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
+    <string name="year_1965">1965</string>
+    <string name="genre">Жанр</string>
+    <string name="genre_rock">Rock</string>
+    <string name="country">Страна</string>
+    <string name="county_great_britain">Великобритания</string>
 </resources>
