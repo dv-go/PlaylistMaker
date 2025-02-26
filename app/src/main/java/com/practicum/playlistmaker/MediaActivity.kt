@@ -221,4 +221,11 @@ class MediaActivity : AppCompatActivity() {
         mediaPlayer?.release()
         mediaPlayer = null
     }
+
+    override fun onPause() {
+        super.onPause()
+        if (isPlayingFlag) {
+            pausePlayback()
+        }
+    }
 }
