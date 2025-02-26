@@ -20,8 +20,11 @@ class MainActivity : AppCompatActivity() {
 
         val button2ClickListener: View.OnClickListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
-                val displayIntent = Intent(this@MainActivity, Media::class.java)
+                val displayIntent = Intent(this@MainActivity, MediaActivity::class.java).apply {
+                    putExtra("IS_FROM_MAIN", true)
+                }
                 startActivity(displayIntent)
+
             }
         }
 

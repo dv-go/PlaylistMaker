@@ -1,10 +1,277 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Media">
+    android:fillViewport="true"
+    tools:context=".MediaActivity">
 
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/settings_screen_background_color"
+    >
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="24dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="24dp" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        app:navigationIcon="@drawable/ic_back_button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/artwork_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="82dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/album"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/RoundedImageView" />
+
+    <TextView
+        android:id="@+id/track_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="@string/album_name"
+        android:textColor="@color/default_color"
+        android:textSize="22sp"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/artwork_image" />
+
+    <TextView
+        android:id="@+id/artist_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="@string/group_name"
+        android:textColor="@color/default_color"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@id/track_name" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="artist_name" />
+
+
+    <ImageButton
+        android:id="@+id/add_to_list_button"
+        android:layout_width="51dp"
+        android:layout_height="51dp"
+        android:background="@drawable/round_button"
+        android:src="@drawable/ic_add_to_list"
+        app:layout_constraintBottom_toTopOf="@id/barrier2"
+        app:layout_constraintEnd_toStartOf="@id/play_button"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="@id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@id/barrier1" />
+
+    <ImageButton
+        android:id="@+id/play_button"
+        android:layout_width="83dp"
+        android:layout_height="83dp"
+        android:layout_marginVertical="38.33dp"
+        android:background="@drawable/round_button"
+        android:backgroundTint="@color/default_color_inverse"
+        android:src="@drawable/ic_play_button"
+        app:layout_constraintBottom_toTopOf="@id/barrier2"
+        app:layout_constraintEnd_toStartOf="@id/like_button"
+        app:layout_constraintStart_toEndOf="@id/add_to_list_button"
+        app:layout_constraintTop_toBottomOf="@id/barrier1" />
+
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12.33dp"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="0:30"
+        android:textColor="@color/default_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@id/right_guideline"
+        app:layout_constraintStart_toStartOf="@id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@id/play_button" />
+
+    <ImageButton
+        android:id="@+id/like_button"
+        android:layout_width="51dp"
+        android:layout_height="51dp"
+        android:background="@drawable/round_button"
+        android:src="@drawable/ic_like_button"
+        app:layout_constraintBottom_toTopOf="@id/barrier2"
+        app:layout_constraintEnd_toEndOf="@id/right_guideline"
+        app:layout_constraintStart_toEndOf="@id/play_button"
+        app:layout_constraintTop_toBottomOf="@id/barrier1" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="play_button" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left_description_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_description_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="16dp" />
+
+    <TextView
+        android:id="@+id/track_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/ys_display_regular"
+        android:text="Длительность"
+        android:textColor="#AEAFB4"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="@id/left_description_guideline"
+        app:layout_constraintTop_toBottomOf="@id/barrier2" />
+
+    <TextView
+        android:id="@+id/track_time_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/ys_display_regular"
+        android:text="5:35"
+        android:textColor="@color/default_color"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="@id/right_description_guideline"
+        app:layout_constraintTop_toBottomOf="@id/barrier2" />
+
+    <TextView
+        android:id="@+id/track_name_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:fontFamily="@font/ys_display_regular"
+        android:text="Альбом"
+        android:textColor="#AEAFB4"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="@id/left_description_guideline"
+        app:layout_constraintTop_toBottomOf="@id/track_time" />
+
+    <TextView
+        android:id="@+id/track_name_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:fontFamily="@font/ys_display_regular"
+        android:text="@string/album_name"
+        android:textColor="@color/default_color"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="@id/right_description_guideline"
+        app:layout_constraintTop_toBottomOf="@id/track_time" />
+
+    <TextView
+        android:id="@+id/release_date_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:fontFamily="@font/ys_display_regular"
+        android:text="Год"
+        android:textColor="#AEAFB4"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="@id/left_description_guideline"
+        app:layout_constraintTop_toBottomOf="@id/track_name_field" />
+
+    <TextView
+        android:id="@+id/release_date_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:fontFamily="@font/ys_display_regular"
+        android:text="1965"
+        android:textColor="@color/default_color"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="@id/right_description_guideline"
+        app:layout_constraintTop_toBottomOf="@id/track_name_field" />
+
+    <TextView
+        android:id="@+id/genre_name_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:fontFamily="@font/ys_display_regular"
+        android:text="Жанр"
+        android:textColor="#AEAFB4"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="@id/left_description_guideline"
+        app:layout_constraintTop_toBottomOf="@id/release_date_field" />
+
+    <TextView
+        android:id="@+id/genre_name_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:fontFamily="@font/ys_display_regular"
+        android:text="Rock"
+        android:textColor="@color/default_color"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="@id/right_description_guideline"
+        app:layout_constraintTop_toBottomOf="@id/release_date_field" />
+
+    <TextView
+        android:id="@+id/country_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:paddingBottom="28dp"
+        android:fontFamily="@font/ys_display_regular"
+        android:text="Страна"
+        android:textColor="#AEAFB4"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="@id/left_description_guideline"
+        app:layout_constraintTop_toBottomOf="@id/genre_name_field" />
+
+    <TextView
+        android:id="@+id/country_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:paddingBottom="28dp"
+        android:fontFamily="@font/ys_display_regular"
+        android:text="Великобритания"
+        android:textColor="@color/default_color"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="@id/right_description_guideline"
+        app:layout_constraintTop_toBottomOf="@id/genre_name_field" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
