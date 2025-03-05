@@ -38,14 +38,7 @@ class SearchActivity : AppCompatActivity() {
         performClickWithDebounce {
             searchHistory.saveToHistory(track)
             val intent = Intent(this, MediaActivity::class.java).apply {
-                putExtra("TRACK_NAME", track.trackName)
-                putExtra("ARTIST_NAME", track.artistName)
-                putExtra("TRACK_DURATION", track.trackTimeMillis)
-                putExtra("ARTWORK_URL", track.artworkUrl100)
-                putExtra("RELEASE_DATE", track.releaseDate)
-                putExtra("GENRE_NAME", track.primaryGenreName)
-                putExtra("COUNTRY", track.country)
-                putExtra("PREVIEW_URL", track.previewUrl)
+                putExtra("TRACK", track)
             }
             startActivity(intent)
         }

@@ -24,6 +24,7 @@ class MediaActivity : AppCompatActivity() {
         const val KEY_GENRE_NAME = "GENRE_NAME"
         const val KEY_COUNTRY = "COUNTRY"
         const val KEY_PREVIEW_URL = "PREVIEW_URL"
+        private const val TIMER_UPDATE_DELAY = 500L
     }
 
     private lateinit var playButton: ImageView
@@ -38,7 +39,7 @@ class MediaActivity : AppCompatActivity() {
     private val updateTimerRunnable = object : Runnable {
         override fun run() {
             updateTimer()
-            handler.postDelayed(this, 500)
+            handler.postDelayed(this, TIMER_UPDATE_DELAY)
         }
     }
 
@@ -51,51 +52,24 @@ class MediaActivity : AppCompatActivity() {
             finish()
         }
 
-        val isFromMain = intent.getBooleanExtra(KEY_IS_FROM_MAIN, false)
-
         playButton = findViewById(R.id.play_button)
         timerTextView = findViewById(R.id.timer)
 
-        val track = when {
-            savedInstanceState != null -> restoreTrackData(savedInstanceState)
-            isFromMain -> getDefaultTrack()
-            else -> getIntentTrack()
+        val track: Track? = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra("TRACK", Track::class.java)
+        } else {
+            intent.getParcelableExtra("TRACK")
+        }
+
+        if (track == null) {
+            finish()
+            return
         }
 
         loadTrackDataFromIntent(track)
         previewUrl = track.previewUrl
 
         setupPlayButton()
-    }
-
-    private fun getDefaultTrack(): Track {
-        return Track(
-            trackId = 0,
-            trackName = getString(R.string.album_name),
-            artistName = getString(R.string.group_name),
-            trackTimeMillis = "5:35",
-            artworkUrl100 = "",
-            collectionName = null,
-            releaseDate = "1965",
-            primaryGenreName = "Rock",
-            country = "Великобритания",
-            previewUrl = "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview112/v4/1c/67/9a/1c679a61-a1cd-e7ae-9b58-630e595e7b2a/mzaf_12558727020823763101.plus.aac.p.m4a"
-        )
-    }
-
-    private fun getIntentTrack(): Track {
-        return Track(
-            trackId = intent.getIntExtra("TRACK_ID", 0),
-            trackName = intent.getStringExtra(KEY_TRACK_NAME) ?: "Unknown Track",
-            artistName = intent.getStringExtra(KEY_ARTIST_NAME) ?: "Unknown Artist",
-            trackTimeMillis = intent.getStringExtra(KEY_TRACK_DURATION) ?: "0:00",
-            artworkUrl100 = intent.getStringExtra(KEY_ARTWORK_URL) ?: "",
-            collectionName = null,
-            releaseDate = intent.getStringExtra(KEY_RELEASE_DATE) ?: "Unknown Year",
-            primaryGenreName = intent.getStringExtra(KEY_GENRE_NAME) ?: "Unknown Genre",
-            country = intent.getStringExtra(KEY_COUNTRY) ?: "Unknown Country",
-            previewUrl = intent.getStringExtra(KEY_PREVIEW_URL) ?: ""
-        )
     }
 
     private fun setupPlayButton() {
@@ -224,8 +198,7 @@ class MediaActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        if (isPlayingFlag) {
-            pausePlayback()
-        }
+        pausePlayback()
     }
+
 }

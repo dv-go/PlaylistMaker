@@ -1,14 +1,19 @@
 package com.practicum.playlistmaker
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Track(
-    val trackId: Int,               // Уникальный идентификатор трека
-    val trackName: String,          // Название композиции
-    val artistName: String,         // Имя исполнителя
-    var trackTimeMillis: String,    // Продолжительность трека
-    val artworkUrl100: String,      // Ссылка на изображение обложки
-    val collectionName: String?,    // Название альбома (может быть null)
-    val releaseDate: String,        // Год релиза трека
-    val primaryGenreName: String,   // Жанр трека
-    val country: String,            // Страна исполнителя
-    val previewUrl: String          // 🔥 Ссылка на аудио-превью трека
-)
+    val trackId: Int,
+    val trackName: String,
+    val artistName: String,
+    var trackTimeMillis: String,
+    val artworkUrl100: String,
+    val collectionName: String?,
+    val releaseDate: String,
+    val primaryGenreName: String,
+    val country: String,
+    val previewUrl: String
+) : Parcelable
+
