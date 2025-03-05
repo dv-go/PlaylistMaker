@@ -3,6 +3,8 @@ package com.practicum.playlistmaker
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MotionEvent
@@ -12,6 +14,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -32,20 +35,14 @@ class SearchActivity : AppCompatActivity() {
     private val trackServise = RetrofitClient.instance.create(ITunesSearchAPI::class.java)
 
     private val adapter = TracksAdapter { track ->
-        searchHistory.saveToHistory(track)
-        val intent = Intent(this, MediaActivity::class.java).apply {
-            putExtra("TRACK_NAME", track.trackName)
-            putExtra("ARTIST_NAME", track.artistName)
-            putExtra("TRACK_DURATION", track.trackTimeMillis)
-            putExtra("ARTWORK_URL", track.artworkUrl100)
-            putExtra("RELEASE_DATE", track.releaseDate)
-            putExtra("GENRE_NAME", track.primaryGenreName)
-            putExtra("COUNTRY", track.country)
+        performClickWithDebounce {
+            searchHistory.saveToHistory(track)
+            val intent = Intent(this, MediaActivity::class.java).apply {
+                putExtra("TRACK", track)
+            }
+            startActivity(intent)
         }
-        startActivity(intent)
-
     }
-
 
     private lateinit var inputEditText: EditText
     private lateinit var placeholderMessage: TextView
@@ -56,8 +53,19 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchHistory: SearchHistory
     private lateinit var clearHistoryButton: Button
     private lateinit var historyMessage: TextView
+    private lateinit var progressBar: ProgressBar
 
-    companion object { private const val DEFAULT_TIME_STRING = "00:00" }
+
+    companion object {
+        private const val DEFAULT_TIME_STRING = "00:00"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { search() }
+
+    private var isClickAllowed = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +80,8 @@ class SearchActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.toolbar)
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
         historyMessage = findViewById(R.id.yourHistoryMessage)
+        progressBar = findViewById(R.id.progressBar)
+
 
         adapter.tracksList = trackList
         trackListView.adapter = adapter
@@ -88,6 +98,20 @@ class SearchActivity : AppCompatActivity() {
 
         setupListeners()
         updateHistory()
+    }
+
+    private fun performClickWithDebounce(action: () -> Unit) {
+        if (isClickAllowed) {
+            isClickAllowed = false
+            action()
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+    }
+
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
     private fun setupListeners(){
@@ -143,12 +167,19 @@ class SearchActivity : AppCompatActivity() {
                 setClearButtonVisibility(searchText.isNotEmpty())
 
                 if (searchText.isEmpty() && inputEditText.hasFocus()) {
-                    hidePlaceholders()
                     showHistoryUI(true)
                     updateHistory()
+                    hidePlaceholders()
                 } else {
                     showHistoryUI(false)
                 }
+
+                if (searchText.isNotEmpty()) {
+                    searchDebounce()
+                } else {
+                    handler.removeCallbacks(searchRunnable)
+                }
+
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -173,8 +204,10 @@ class SearchActivity : AppCompatActivity() {
                     trackList.clear()
                     adapter.notifyDataSetChanged()
                     inputEditText.performClick()
-                    hidePlaceholders()
                     updateHistory()
+                    hidePlaceholders()
+                    handler.removeCallbacks(searchRunnable)
+                    showMessage("")
                     true
                 } else false
             } else false
@@ -272,8 +305,10 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search(){
+        hideKeyboard()
         hidePlaceholders()
         trackListView.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
 
         trackServise.search(searchText)
             .enqueue(object : Callback<TrackResponse>{
@@ -281,6 +316,7 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
+                    progressBar.visibility = View.GONE
                     when (response.code()){
                         200 -> {
                             val results = response.body()?.results
@@ -302,9 +338,15 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                    progressBar.visibility = View.GONE
                     showMessage(getString(R.string.something_went_wrong))
                 }
             })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(searchRunnable)
     }
 
 }
