@@ -39,4 +39,5 @@
     <string name="genre_rock">Rock</string>
     <string name="country">Страна</string>
     <string name="county_great_britain">Великобритания</string>
+    <string name="default_time_0_00">0:00</string>
 </resources>

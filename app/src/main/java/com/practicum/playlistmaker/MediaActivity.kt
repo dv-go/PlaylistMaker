@@ -14,12 +14,10 @@ import java.util.Locale
 class MediaActivity : AppCompatActivity() {
 
     companion object {
-        const val KEY_IS_FROM_MAIN = "IS_FROM_MAIN"
         const val KEY_TRACK_NAME = "TRACK_NAME"
         const val KEY_ARTIST_NAME = "ARTIST_NAME"
         const val KEY_TRACK_DURATION = "TRACK_DURATION"
         const val KEY_ARTWORK_URL = "ARTWORK_URL"
-        const val KEY_RELEASE_DATE = "RELEASE_DATE"
         const val KEY_RELEASE_YEAR = "RELEASE_YEAR"
         const val KEY_GENRE_NAME = "GENRE_NAME"
         const val KEY_COUNTRY = "COUNTRY"
@@ -155,26 +153,11 @@ class MediaActivity : AppCompatActivity() {
             findViewById<ImageView>(R.id.artwork_image).setImageResource(R.drawable.album)
         }
 
-        timerTextView.text = "0:00"
+        timerTextView.text = getString(R.string.default_time_0_00)
     }
 
     private fun extractYear(dateString: String): String {
         return if (dateString.length >= 4) dateString.substring(0, 4) else "Unknown"
-    }
-
-    private fun restoreTrackData(savedInstanceState: Bundle): Track {
-        return Track(
-            trackId = 0,
-            trackName = savedInstanceState.getString(KEY_TRACK_NAME) ?: "",
-            artistName = savedInstanceState.getString(KEY_ARTIST_NAME) ?: "",
-            trackTimeMillis = savedInstanceState.getString(KEY_TRACK_DURATION) ?: "00:00",
-            artworkUrl100 = savedInstanceState.getString(KEY_ARTWORK_URL) ?: "",
-            collectionName = null,
-            releaseDate = savedInstanceState.getString(KEY_RELEASE_YEAR) ?: "",
-            primaryGenreName = savedInstanceState.getString(KEY_GENRE_NAME) ?: "",
-            country = savedInstanceState.getString(KEY_COUNTRY) ?: "",
-            previewUrl = savedInstanceState.getString(KEY_PREVIEW_URL) ?: ""
-        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
