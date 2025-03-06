@@ -1,8 +1,10 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.domain.models.Track
 
 class TracksAdapter(private val onTrackClick: (Track) -> Unit) : RecyclerView.Adapter<TracksViewHolder> () {
 
@@ -26,9 +28,11 @@ class TracksAdapter(private val onTrackClick: (Track) -> Unit) : RecyclerView.Ad
         return tracksList.size
     }
 
-    fun updateTracks(newTracks: List<Track>) {
+    fun setTracks(newTracks: List<Track>) {
         tracksList.clear()
         tracksList.addAll(newTracks)
         notifyDataSetChanged()
     }
+
+
 }

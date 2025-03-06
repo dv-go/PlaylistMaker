@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation
 
 import android.content.Context
 import android.content.Intent
@@ -21,22 +21,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.di.Creator
+import com.practicum.playlistmaker.domain.api.TracksInteractor
+import com.practicum.playlistmaker.domain.models.Track
 
 class SearchActivity : AppCompatActivity() {
 
     private var searchText: String = ""
-    private val trackList = ArrayList<Track>()
-
-    private val trackServise = RetrofitClient.instance.create(ITunesSearchAPI::class.java)
 
     private val adapter = TracksAdapter { track ->
         performClickWithDebounce {
-            searchHistory.saveToHistory(track)
+            tracksInteractor.saveToHistory(track)
             val intent = Intent(this, MediaActivity::class.java).apply {
                 putExtra("TRACK", track)
             }
@@ -50,14 +46,12 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var refreshButton: Button
     private lateinit var trackListView: RecyclerView
     private lateinit var toolbar:Toolbar
-    private lateinit var searchHistory: SearchHistory
     private lateinit var clearHistoryButton: Button
     private lateinit var historyMessage: TextView
     private lateinit var progressBar: ProgressBar
-
+    private lateinit var tracksInteractor: TracksInteractor
 
     companion object {
-        private const val DEFAULT_TIME_STRING = "00:00"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
@@ -81,9 +75,8 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
         historyMessage = findViewById(R.id.yourHistoryMessage)
         progressBar = findViewById(R.id.progressBar)
+        tracksInteractor = Creator.provideMoviesInteractor()
 
-
-        adapter.tracksList = trackList
         trackListView.adapter = adapter
 
         if (savedInstanceState != null) {
@@ -92,9 +85,6 @@ class SearchActivity : AppCompatActivity() {
         }
 
         setClearButtonVisibility(searchText.isNotEmpty())
-
-        val sharedPreferences = getSharedPreferences("search_prefs", MODE_PRIVATE)
-        searchHistory = SearchHistory(sharedPreferences)
 
         setupListeners()
         updateHistory()
@@ -107,7 +97,6 @@ class SearchActivity : AppCompatActivity() {
             handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
     }
-
 
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
@@ -138,11 +127,12 @@ class SearchActivity : AppCompatActivity() {
         }
 
         clearHistoryButton.setOnClickListener {
-            searchHistory.clearHistory()
-            adapter.updateTracks(emptyList())
+            tracksInteractor.clearHistory()
+            adapter.setTracks(emptyList())
             showHistoryUI(false)
             Toast.makeText(this, "История поиска очищена", Toast.LENGTH_SHORT).show()
         }
+
 
         clearHistoryButton.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
@@ -201,13 +191,11 @@ class SearchActivity : AppCompatActivity() {
                     inputEditText.clearFocus()
                     hideKeyboard()
                     setClearButtonVisibility(false)
-                    trackList.clear()
-                    adapter.notifyDataSetChanged()
-                    inputEditText.performClick()
-                    updateHistory()
+                    adapter.setTracks(emptyList())
                     hidePlaceholders()
                     handler.removeCallbacks(searchRunnable)
                     showMessage("")
+                    updateHistory()
                     true
                 } else false
             } else false
@@ -237,13 +225,13 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun updateHistory() {
-        val historyTracks = searchHistory.getHistory()
+        val historyTracks = tracksInteractor.getSearchHistory()
         if (historyTracks.isEmpty()) {
-            adapter.updateTracks(emptyList())
+            adapter.setTracks(emptyList())
             showHistoryUI(false)
             hidePlaceholders()
         } else {
-            adapter.updateTracks(historyTracks)
+            adapter.setTracks(historyTracks)
             showHistoryUI(true)
         }
     }
@@ -275,73 +263,49 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showMessage(text: String) {
-        if (text.isNotEmpty()) {
-            placeholderMessage.visibility = View.VISIBLE
-            placeholderImage.visibility = View.VISIBLE
-            placeholderMessage.text = text
-            when (text) {
-                getString(R.string.nothing_found) -> placeholderImage.setImageResource(R.drawable.nothing_found)
-                getString(R.string.something_went_wrong) -> {
-                    placeholderImage.setImageResource(R.drawable.no_connection)
-                    refreshButton.visibility = View.VISIBLE
-                }
-            }
-            trackList.clear()
-            adapter.notifyDataSetChanged()
-        } else {
-            placeholderMessage.visibility = View.GONE
-            placeholderImage.visibility = View.GONE
-            refreshButton.visibility = View.GONE
+        when (text) {
+            getString(R.string.nothing_found) -> updateMessageUI(true, text, R.drawable.nothing_found)
+            getString(R.string.something_went_wrong) -> updateMessageUI(true, text, R.drawable.no_connection)
+            else -> updateMessageUI(false)
         }
+        adapter.setTracks(emptyList())
     }
 
-    fun formatTrackDuration(durationMs: String): String {
-        return try {
-            val durationLong = durationMs.toLong()
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(durationLong)
-        } catch (e: NumberFormatException) {
-            DEFAULT_TIME_STRING
-        }
+    private fun updateMessageUI(isVisible: Boolean, message: String? = null, imageRes: Int? = null) {
+        placeholderMessage.visibility = if (isVisible) View.VISIBLE else View.GONE
+        placeholderImage.visibility = if (isVisible) View.VISIBLE else View.GONE
+        refreshButton.visibility = if (isVisible && imageRes == R.drawable.no_connection) View.VISIBLE else View.GONE
+
+        message?.let { placeholderMessage.text = it }
+        imageRes?.let { placeholderImage.setImageResource(it) }
     }
 
-    private fun search(){
-        hideKeyboard()
+    private fun search() {
+        if (inputEditText.hasFocus()) {
+            hideKeyboard()
+        }
+
         hidePlaceholders()
         trackListView.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
 
-        trackServise.search(searchText)
-            .enqueue(object : Callback<TrackResponse>{
-                override fun onResponse(
-                    call: Call<TrackResponse>,
-                    response: Response<TrackResponse>
-                ) {
+        tracksInteractor.searchTracks(searchText, object : TracksInteractor.TracksConsumer {
+            override fun consume(foundTracks: List<Track>) {
+                runOnUiThread {
                     progressBar.visibility = View.GONE
-                    when (response.code()){
-                        200 -> {
-                            val results = response.body()?.results
-                            if (results != null && results.isNotEmpty()) {
-                                trackList.clear()
-                                results.forEach { track ->
-                                    track.trackTimeMillis = formatTrackDuration(track.trackTimeMillis)
-                                }
-                                trackList.addAll(results)
-                                adapter.notifyDataSetChanged()
-
-                                trackListView.visibility = View.VISIBLE
-                            } else {
-                                showMessage(getString(R.string.nothing_found))
-                            }
-                        }
-                        else -> showMessage(getString(R.string.something_went_wrong))
-                    }
+                    handleSearchResult(foundTracks)
                 }
+            }
+        })
+    }
 
-                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    progressBar.visibility = View.GONE
-                    showMessage(getString(R.string.something_went_wrong))
-                }
-            })
+    private fun handleSearchResult(foundTracks: List<Track>) {
+        if (foundTracks.isNotEmpty()) {
+            adapter.setTracks(foundTracks)
+            trackListView.visibility = View.VISIBLE
+        } else {
+            showMessage(getString(R.string.nothing_found))
+        }
     }
 
     override fun onDestroy() {

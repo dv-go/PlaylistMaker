@@ -1,28 +1,32 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.data
 
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.practicum.playlistmaker.data.dto.SearchHistoryDto
+import com.practicum.playlistmaker.data.dto.toDto
+import com.practicum.playlistmaker.domain.models.Track
 
 class SearchHistory(private val sharedPreferences: SharedPreferences) {
 
     private val HISTORY_KEY = "search_history"
     private val MAX_HISTORY_SIZE = 10
-    private val gson = Gson()
+    private val dto = SearchHistoryDto(Gson())
 
     fun getHistory(): List<Track> {
-        val historyJson = sharedPreferences.getString(HISTORY_KEY, null) ?: return emptyList()
-        val type = object : TypeToken<List<Track>>() {}.type
-        return gson.fromJson(historyJson, type)
+        val historyJson = sharedPreferences.getString(HISTORY_KEY, null)
+        val trackDtoList = dto.fromJson(historyJson)
+        return trackDtoList.map { it.toDomain() }
     }
 
     fun saveToHistory(track: Track) {
         val currentHistory = getHistory().toMutableList()
         currentHistory.removeAll { it.trackId == track.trackId }
         currentHistory.add(0, track)
+
         if (currentHistory.size > MAX_HISTORY_SIZE) {
             currentHistory.removeAt(currentHistory.lastIndex)
         }
+
         saveHistory(currentHistory)
     }
 
@@ -31,7 +35,8 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
     }
 
     private fun saveHistory(history: List<Track>) {
-        val historyJson = gson.toJson(history)
+        val trackDtoList = history.map { it.toDto() }
+        val historyJson = dto.toJson(trackDtoList)
         sharedPreferences.edit().putString(HISTORY_KEY, historyJson).apply()
     }
 }
