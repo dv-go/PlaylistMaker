@@ -75,7 +75,7 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
         historyMessage = findViewById(R.id.yourHistoryMessage)
         progressBar = findViewById(R.id.progressBar)
-        tracksInteractor = Creator.provideMoviesInteractor()
+        tracksInteractor = Creator.provideTracksInteractor()
 
         trackListView.adapter = adapter
 

@@ -6,8 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.domain.interactor.SettingsInteractorImpl
-import com.practicum.playlistmaker.data.repository.ThemeRepositoryImpl
+import com.practicum.playlistmaker.di.Creator
 import com.practicum.playlistmaker.domain.api.SettingsInteractor
 
 class SettingsActivity : AppCompatActivity() {
@@ -18,8 +17,7 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val themeRepository = ThemeRepositoryImpl(applicationContext)
-        settingsInteractor = SettingsInteractorImpl(applicationContext, themeRepository)
+        settingsInteractor = Creator.provideSettingsInteractor()
 
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.switch_option)
         themeSwitcher.isChecked = settingsInteractor.isDarkThemeEnabled()

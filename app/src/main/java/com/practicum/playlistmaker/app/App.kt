@@ -11,8 +11,7 @@ const val THEME_KEY = "key_for_darkTheme"
 class App : Application() {
 
     private lateinit var sharedPrefs: SharedPreferences
-    var darkTheme = false
-        private set
+    private var darkTheme = false
 
     override fun onCreate() {
         super.onCreate()
@@ -22,17 +21,9 @@ class App : Application() {
         initTheme()
     }
 
-
     private fun initTheme() {
         darkTheme = sharedPrefs.getBoolean(THEME_KEY, isSystemDarkTheme())
-
-        AppCompatDelegate.setDefaultNightMode(
-            if (darkTheme) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
-        )
+        applyTheme()
     }
 
     private fun isSystemDarkTheme(): Boolean {
@@ -44,9 +35,12 @@ class App : Application() {
     fun switchTheme(darkThemeEnabled: Boolean) {
         darkTheme = darkThemeEnabled
         sharedPrefs.edit().putBoolean(THEME_KEY, darkThemeEnabled).apply()
+        applyTheme()
+    }
 
+    private fun applyTheme() {
         AppCompatDelegate.setDefaultNightMode(
-            if (darkThemeEnabled) {
+            if (darkTheme) {
                 AppCompatDelegate.MODE_NIGHT_YES
             } else {
                 AppCompatDelegate.MODE_NIGHT_NO
