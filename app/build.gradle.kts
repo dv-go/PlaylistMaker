@@ -53,4 +53,5 @@ dependencies {
     implementation("com.google.android.material:material:1.6.1")
     annotationProcessor("com.github.bumptech.glide:compiler:4.14.2")
     implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.core:core-ktx:1.9.0")
     }
