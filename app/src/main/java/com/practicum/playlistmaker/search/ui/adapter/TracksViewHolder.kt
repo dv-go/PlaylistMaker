@@ -16,12 +16,12 @@ class TracksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val trackTime: TextView = itemView.findViewById(R.id.trackTime)
     private val artworkImage: ImageView = itemView.findViewById(R.id.artworkImage)
 
-    fun bind(model: Track){
-        trackName.text = model.trackName
-        artistName.text = model.artistName
-        trackTime.text = model.trackTimeMillis
+    fun bind(track: Track) {
+        trackName.text = track.trackName
+        artistName.text = track.artistName
+        trackTime.text = track.trackTimeMillis
         Glide.with(itemView.context)
-            .load(model.artworkUrl100)
+            .load(track.artworkUrl100)
             .placeholder(R.drawable.placeholder)
             .apply(
                 RequestOptions()

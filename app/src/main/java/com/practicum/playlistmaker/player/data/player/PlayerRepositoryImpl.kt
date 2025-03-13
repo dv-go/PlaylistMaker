@@ -3,12 +3,13 @@ package com.practicum.playlistmaker.player.data.player
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
+import com.practicum.playlistmaker.player.domain.api.PlayerRepository
 
-class MediaPlayerManager(
-    private val previewUrl: String
-) {
+class PlayerRepositoryImpl(
+    private val previewUrl: String,
+    private val mediaPlayer: MediaPlayer
+) : PlayerRepository {
 
-    private var mediaPlayer: MediaPlayer? = null
     private var isPlaying = false
     private val handler = Handler(Looper.getMainLooper())
 
@@ -17,38 +18,34 @@ class MediaPlayerManager(
 
     private val updateTimerRunnable = object : Runnable {
         override fun run() {
-            mediaPlayer?.let { player ->
-                val currentTime = formatTime(player.currentPosition)
-                onTimeUpdate?.invoke(currentTime)
-                handler.postDelayed(this, 500L)
-            }
+            val currentTime = formatTime(mediaPlayer.currentPosition)
+            onTimeUpdate?.invoke(currentTime)
+            handler.postDelayed(this, 500L)
         }
     }
 
     init {
         if (previewUrl.isNotEmpty()) {
-            mediaPlayer = MediaPlayer().apply {
-                setDataSource(previewUrl)
+            mediaPlayer.apply {
                 setOnPreparedListener {
                     handler.post(updateTimerRunnable)
                 }
                 setOnCompletionListener {
                     resetPlayback()
                 }
-                prepareAsync()
             }
         }
     }
 
-    fun setOnTimeUpdateListener(listener: (String) -> Unit) {
+    override fun setOnTimeUpdateListener(listener: (String) -> Unit) {
         onTimeUpdate = listener
     }
 
-    fun setOnPlaybackStateChangedListener(listener: (Boolean) -> Unit) {
+    override fun setOnPlaybackStateChangedListener(listener: (Boolean) -> Unit) {
         onPlaybackStateChanged = listener
     }
 
-    fun togglePlayback() {
+    override fun togglePlayback() {
         if (isPlaying) {
             pausePlayback()
         } else {
@@ -57,45 +54,38 @@ class MediaPlayerManager(
         onPlaybackStateChanged?.invoke(isPlaying)
     }
 
-    fun startPlayback() {
-        mediaPlayer?.let {
-            if (!isPlaying) {
-                it.start()
-                isPlaying = true
-                handler.post(updateTimerRunnable)
-                onPlaybackStateChanged?.invoke(true)
-            }
+    override fun startPlayback() {
+        if (!isPlaying) {
+            mediaPlayer.start()
+            isPlaying = true
+            handler.post(updateTimerRunnable)
+            onPlaybackStateChanged?.invoke(true)
         }
     }
 
-    fun pausePlayback() {
-        mediaPlayer?.let {
-            if (isPlaying) {
-                it.pause()
-                isPlaying = false
-                handler.removeCallbacks(updateTimerRunnable)
-                onPlaybackStateChanged?.invoke(false)
-            }
-        }
-    }
-
-    fun resetPlayback() {
-        mediaPlayer?.let {
-            it.seekTo(0)
+    override fun pausePlayback() {
+        if (isPlaying) {
+            mediaPlayer.pause()
             isPlaying = false
             handler.removeCallbacks(updateTimerRunnable)
-            onTimeUpdate?.invoke("0:00")
             onPlaybackStateChanged?.invoke(false)
         }
     }
 
-    fun release() {
+    override fun resetPlayback() {
+        mediaPlayer.seekTo(0)
+        isPlaying = false
         handler.removeCallbacks(updateTimerRunnable)
-        mediaPlayer?.release()
-        mediaPlayer = null
+        onTimeUpdate?.invoke("0:00")
+        onPlaybackStateChanged?.invoke(false)
     }
 
-    fun isPlaying(): Boolean {
+    override fun release() {
+        handler.removeCallbacks(updateTimerRunnable)
+        mediaPlayer.release()
+    }
+
+    override fun isPlaying(): Boolean {
         return isPlaying
     }
 

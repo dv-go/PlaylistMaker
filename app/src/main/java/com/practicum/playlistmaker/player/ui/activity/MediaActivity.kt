@@ -3,14 +3,14 @@ package com.practicum.playlistmaker.player.ui.activity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.player.data.player.MediaPlayerManager
 import com.practicum.playlistmaker.player.ui.viewmodel.MediaViewModel
 import com.practicum.playlistmaker.player.ui.viewmodel.MediaViewModelFactory
+import com.practicum.playlistmaker.player.domain.model.MediaScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 
 class MediaActivity : AppCompatActivity() {
@@ -19,10 +19,10 @@ class MediaActivity : AppCompatActivity() {
     private lateinit var timerTextView: TextView
     private lateinit var track: Track
 
-    private val mediaViewModel: MediaViewModel by lazy {
-        val previewUrl = track.previewUrl ?: ""
-        val mediaPlayerManager = MediaPlayerManager(previewUrl)
-        ViewModelProvider(this, MediaViewModelFactory(mediaPlayerManager, track))[MediaViewModel::class.java]
+    private val mediaViewModel: MediaViewModel by viewModels {
+        val track = intent.getSerializableExtra("TRACK") as? Track
+            ?: throw IllegalArgumentException("Track is missing in Intent")
+        MediaViewModelFactory(track)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,48 +34,21 @@ class MediaActivity : AppCompatActivity() {
         playButton = findViewById(R.id.play_button)
         timerTextView = findViewById(R.id.timer)
 
-        track = savedInstanceState?.getParcelable("TRACK")
-            ?: intent.getParcelableExtra("TRACK") ?: run {
-                finish()
-                return
-            }
+        track = savedInstanceState?.getSerializable("TRACK") as? Track
+            ?: intent.getSerializableExtra("TRACK") as? Track
+                    ?: throw IllegalArgumentException("Track is missing in savedInstanceState and Intent")
 
         setupObservers()
         setupPlayButton()
     }
 
     private fun setupObservers() {
-        mediaViewModel.currentTime.observe(this) { time ->
-            timerTextView.text = time
-        }
-
-        mediaViewModel.isPlaying.observe(this) { isPlaying ->
-            updatePlayButton(isPlaying)
-        }
-
-        mediaViewModel.trackData.observe(this) { trackData ->
-            findViewById<TextView>(R.id.track_name).text = trackData["trackName"]
-            findViewById<TextView>(R.id.artist_name).text = trackData["artistName"]
-            findViewById<TextView>(R.id.track_time_value).text = trackData["trackTime"]
-            findViewById<TextView>(R.id.release_date_value).text = trackData["releaseYear"]
-            findViewById<TextView>(R.id.genre_name_value).text = trackData["genre"]
-            findViewById<TextView>(R.id.country_value).text = trackData["country"]
-        }
-
-        mediaViewModel.artworkUrl.observe(this) { url ->
-            Glide.with(this)
-                .load(url)
-                .placeholder(R.drawable.album_placeholder)
-                .error(R.drawable.album_placeholder)
-                .into(findViewById<ImageView>(R.id.artwork_image))
-        }
-
-        mediaViewModel.defaultTime.observe(this) { time ->
-            timerTextView.text = time
-        }
-
-        mediaViewModel.playButtonIcon.observe(this) { iconRes ->
-            playButton.setImageResource(iconRes)
+        mediaViewModel.screenState.observe(this) { state ->
+            when (state) {
+                is MediaScreenState.Loading -> showLoading()
+                is MediaScreenState.Error -> showError()
+                is MediaScreenState.Content -> showContent(state)
+            }
         }
     }
 
@@ -85,15 +58,35 @@ class MediaActivity : AppCompatActivity() {
         }
     }
 
-    private fun updatePlayButton(isPlaying: Boolean) {
-        playButton.setImageResource(
-            if (isPlaying) R.drawable.ic_pause_button else R.drawable.ic_play_button
-        )
+    private fun showLoading() {
+    }
+
+    private fun showError() {
+    }
+
+    private fun showContent(state: MediaScreenState.Content) {
+        with(state) {
+            findViewById<TextView>(R.id.track_name).text = track.trackName
+            findViewById<TextView>(R.id.artist_name).text = track.artistName
+            findViewById<TextView>(R.id.track_time_value).text = track.trackTimeMillis
+            findViewById<TextView>(R.id.release_date_value).text = releaseYear
+            findViewById<TextView>(R.id.genre_name_value).text = genre
+            findViewById<TextView>(R.id.country_value).text = country
+
+            timerTextView.text = currentTime
+            playButton.setImageResource(playButtonIcon)
+
+            Glide.with(this@MediaActivity)
+                .load(artworkUrl)
+                .placeholder(R.drawable.album_placeholder)
+                .error(R.drawable.album_placeholder)
+                .into(findViewById<ImageView>(R.id.artwork_image))
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable("TRACK", track)
+        outState.putSerializable("TRACK", track)
     }
 
     override fun onDestroy() {

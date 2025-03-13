@@ -2,7 +2,6 @@ package com.practicum.playlistmaker.search.data.dto
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.practicum.playlistmaker.search.domain.models.Track
 
 class SearchHistoryDto(private val gson: Gson) {
 

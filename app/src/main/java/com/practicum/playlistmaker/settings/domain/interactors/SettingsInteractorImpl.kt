@@ -1,15 +1,13 @@
 package com.practicum.playlistmaker.settings.domain.interactors
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.settings.data.dto.SupportEmailData
+import com.practicum.playlistmaker.settings.domain.api.ExternalNavigator
 import com.practicum.playlistmaker.settings.domain.api.SettingsInteractor
-import com.practicum.playlistmaker.sharing.domain.api.ThemeRepository
+import com.practicum.playlistmaker.settings.domain.api.ThemeRepository
 
 class SettingsInteractorImpl(
-    private val context: Context,
-    private val themeRepository: ThemeRepository
+    private val themeRepository: ThemeRepository,
+    private val externalNavigator: ExternalNavigator
 ) : SettingsInteractor {
 
     override fun isDarkThemeEnabled(): Boolean {
@@ -20,26 +18,15 @@ class SettingsInteractorImpl(
         themeRepository.switchTheme(isEnabled)
     }
 
-    override fun getShareIntent(): Intent {
-        val link = context.getString(R.string.user_agreement_url)
-        return Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, link)
-            type = "text/plain"
-        }
+    override fun getShareLink(): String {
+        return externalNavigator.getShareLink()
     }
 
-    override fun getSupportEmailIntent(): Intent {
-        return Intent(Intent.ACTION_SENDTO).apply {
-            data = Uri.parse("mailto:")
-            putExtra(Intent.EXTRA_EMAIL, arrayOf(context.getString(R.string.support_email)))
-            putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.email_subject))
-            putExtra(Intent.EXTRA_TEXT, context.getString(R.string.email_body))
-        }
+    override fun getSupportEmailData(): SupportEmailData {
+        return externalNavigator.getSupportEmailData()
     }
 
-    override fun getUserAgreementIntent(): Intent {
-        val url = context.getString(R.string.user_agreement_url)
-        return Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    override fun getUserAgreementLink(): String {
+        return externalNavigator.getUserAgreementLink()
     }
 }

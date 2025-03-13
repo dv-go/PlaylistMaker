@@ -4,76 +4,72 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.player.data.player.MediaPlayerManager
+import com.practicum.playlistmaker.player.domain.interactors.PlayerInteractorImpl
+import com.practicum.playlistmaker.player.domain.model.MediaScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 
 class MediaViewModel(
-    private val mediaPlayerManager: MediaPlayerManager,
+    private val playerInteractor: PlayerInteractorImpl,
     private val track: Track
 ) : ViewModel() {
 
-    private val _isPlaying = MutableLiveData<Boolean>()
-    val isPlaying: LiveData<Boolean> get() = _isPlaying
-
-    private val _currentTime = MutableLiveData<String>()
-    val currentTime: LiveData<String> get() = _currentTime
-
-    private val _trackData = MutableLiveData<Map<String, String>>()
-    val trackData: LiveData<Map<String, String>> get() = _trackData
-
-    private val _defaultTime = MutableLiveData<String>()
-    val defaultTime: LiveData<String> = _defaultTime
-
-    private val _artworkUrl = MutableLiveData<String>()
-    val artworkUrl: LiveData<String> = _artworkUrl
-
-    private val _playButtonIcon = MutableLiveData<Int>()
-    val playButtonIcon: LiveData<Int> = _playButtonIcon
+    private val _screenState = MutableLiveData<MediaScreenState>()
+    val screenState: LiveData<MediaScreenState> get() = _screenState
 
     init {
-        mediaPlayerManager.setOnTimeUpdateListener { time ->
-            _currentTime.postValue(time)
-        }
-
-        mediaPlayerManager.setOnPlaybackStateChangedListener { isPlaying ->
-            _isPlaying.postValue(isPlaying)
-        }
-
         loadTrackData()
-        _defaultTime.value = "0:00"
-        _artworkUrl.value = track.artworkUrl100.replace("100x100bb.jpg", "512x512bb.jpg")
-        _playButtonIcon.value = R.drawable.ic_play_button
+        playerInteractor.setOnTimeUpdateListener { time ->
+            updateContentState(currentTime = time)
+        }
+
+        playerInteractor.setOnPlaybackStateChangedListener { isPlaying ->
+            val icon = if (isPlaying) R.drawable.ic_pause_button else R.drawable.ic_play_button
+            updateContentState(playButtonIcon = icon)
+        }
+    }
+
+    private fun loadTrackData() {
+        _screenState.value = MediaScreenState.Content(
+            track = track,
+            currentTime = "0:00",
+            playButtonIcon = R.drawable.ic_play_button,
+            releaseYear = extractYear(track.releaseDate),
+            genre = track.primaryGenreName,
+            country = track.country,
+            artworkUrl = track.artworkUrl100.replace("100x100bb.jpg", "512x512bb.jpg")
+        )
     }
 
     fun togglePlayback() {
-        mediaPlayerManager.togglePlayback()
-        _playButtonIcon.value = if (mediaPlayerManager.isPlaying()) {
+        playerInteractor.togglePlayback()
+        val icon = if (playerInteractor.isPlaying()) {
             R.drawable.ic_pause_button
         } else {
             R.drawable.ic_play_button
         }
-    }
-
-    fun releasePlayer() {
-        mediaPlayerManager.release()
+        updateContentState(playButtonIcon = icon)
     }
 
     fun pausePlayback() {
-        mediaPlayerManager.pausePlayback()
+        playerInteractor.pausePlayback()
+        updateContentState(playButtonIcon = R.drawable.ic_play_button)
     }
 
-    private fun loadTrackData() {
-        _trackData.postValue(
-            mapOf(
-                "trackName" to track.trackName,
-                "artistName" to track.artistName,
-                "trackTime" to track.trackTimeMillis,
-                "releaseYear" to extractYear(track.releaseDate),
-                "genre" to track.primaryGenreName,
-                "country" to track.country,
-                "artworkUrl" to track.artworkUrl100.replace("100x100bb.jpg", "512x512bb.jpg")
+    fun releasePlayer() {
+        playerInteractor.release()
+    }
+
+    private fun updateContentState(
+        currentTime: String? = null,
+        playButtonIcon: Int? = null
+    ) {
+        val currentState = _screenState.value
+        if (currentState is MediaScreenState.Content) {
+            _screenState.value = currentState.copy(
+                currentTime = currentTime ?: currentState.currentTime,
+                playButtonIcon = playButtonIcon ?: currentState.playButtonIcon
             )
-        )
+        }
     }
 
     private fun extractYear(dateString: String): String {

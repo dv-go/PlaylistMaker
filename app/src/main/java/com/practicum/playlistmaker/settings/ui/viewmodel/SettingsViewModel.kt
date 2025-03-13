@@ -1,9 +1,9 @@
 package com.practicum.playlistmaker.settings.ui.viewmodel
 
-import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.practicum.playlistmaker.settings.data.dto.SupportEmailData
 import com.practicum.playlistmaker.settings.domain.api.SettingsInteractor
 
 class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : ViewModel() {
@@ -20,9 +20,15 @@ class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : Vi
         _isDarkThemeEnabled.value = isEnabled
     }
 
-    fun getShareIntent(): Intent = settingsInteractor.getShareIntent()
+    fun getShareLink(): String {
+        return settingsInteractor.getShareLink()
+    }
 
-    fun getSupportEmailIntent(): Intent = settingsInteractor.getSupportEmailIntent()
+    fun getSupportEmailData(): SupportEmailData {
+        return settingsInteractor.getSupportEmailData()
+    }
 
-    fun getUserAgreementIntent(): Intent = settingsInteractor.getUserAgreementIntent()
+    fun getUserAgreementLink(): String {
+        return settingsInteractor.getUserAgreementLink()
+    }
 }

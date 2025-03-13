@@ -12,5 +12,4 @@ interface TracksInteractor {
     interface TracksConsumer {
         fun consume(result: ResultWrapper)
     }
-
 }

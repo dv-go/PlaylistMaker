@@ -21,9 +21,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.creator.Creator
-import com.practicum.playlistmaker.search.domain.api.TracksInteractor
 import com.practicum.playlistmaker.player.ui.activity.MediaActivity
+import com.practicum.playlistmaker.search.domain.models.SearchScreenState
 import com.practicum.playlistmaker.search.ui.adapter.TracksAdapter
 import com.practicum.playlistmaker.search.ui.viewmodel.SearchViewModel
 import com.practicum.playlistmaker.search.ui.viewmodel.SearchViewModelFactory
@@ -41,14 +40,13 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var placeholderImage: ImageView
     private lateinit var refreshButton: Button
     private lateinit var trackListView: RecyclerView
-    private lateinit var toolbar:Toolbar
+    private lateinit var toolbar: Toolbar
     private lateinit var clearHistoryButton: Button
     private lateinit var historyMessage: TextView
     private lateinit var progressBar: ProgressBar
-    private lateinit var tracksInteractor: TracksInteractor
 
     private val viewModel: SearchViewModel by viewModels {
-        SearchViewModelFactory(application, Creator.provideTracksInteractor())
+        SearchViewModelFactory(applicationContext)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +63,6 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
         historyMessage = findViewById(R.id.yourHistoryMessage)
         progressBar = findViewById(R.id.progressBar)
-        tracksInteractor = Creator.provideTracksInteractor()
 
         trackListView.adapter = adapter
 
@@ -73,8 +70,6 @@ class SearchActivity : AppCompatActivity() {
             searchText = savedInstanceState.getString("SEARCH_TEXT", "")
             inputEditText.setText(searchText)
         }
-
-        viewModel.updateClearButtonVisibility(searchText.isNotEmpty())
 
         setupListeners()
         setupObservers()
@@ -84,68 +79,36 @@ class SearchActivity : AppCompatActivity() {
 
     private fun setupObservers() {
 
-        viewModel.tracks.observe(this) { tracks ->
-            adapter.setTracks(tracks)
-        }
-
-        viewModel.trackListVisible.observe(this) { isVisible ->
-            trackListView.visibility = if (isVisible) View.VISIBLE else View.GONE
-            if (isVisible) {
-                adapter.setTracks(viewModel.tracks.value ?: emptyList())
+        viewModel.searchScreenState.observe(this) { state ->
+            when (state) {
+                is SearchScreenState.Loading -> showLoadingState()
+                is SearchScreenState.Loaded -> showLoadedState(state)
+                is SearchScreenState.Error -> showErrorState(state)
+                is SearchScreenState.History -> showHistoryState(state)
+                is SearchScreenState.EmptyHistory -> showEmptyHistoryState()
+                is SearchScreenState.Typing -> showTypingState()
+                is SearchScreenState.ShowToast -> {
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
             }
-        }
-
-        viewModel.historyVisible.observe(this) { isVisible ->
-            historyMessage.visibility = if (isVisible) View.VISIBLE else View.GONE
-            clearHistoryButton.visibility = if (isVisible) View.VISIBLE else View.GONE
-            if (isVisible) {
-                adapter.setTracks(viewModel.tracks.value ?: emptyList())
-                trackListView.visibility = View.VISIBLE
-            }
-        }
-
-        viewModel.placeholderState.observe(this) { state ->
-            placeholderMessage.apply {
-                text = state.message
-                visibility = if (state.isVisible) View.VISIBLE else View.GONE
-            }
-            placeholderImage.apply {
-                visibility = if (state.imageRes != null) View.VISIBLE else View.GONE
-                state.imageRes?.let { setImageResource(it) }
-            }
-            refreshButton.visibility = if (state.isRefreshButtonVisible) View.VISIBLE else View.GONE
         }
 
         viewModel.navigateToMediaActivity.observe(this) { track ->
             track?.let {
+                val bundle = Bundle().apply {
+                    putSerializable("TRACK", track)
+                }
                 val intent = Intent(this, MediaActivity::class.java).apply {
-                    putExtra("TRACK", it)
+                    putExtras(bundle)
                 }
                 startActivity(intent)
+
             }
-        }
-
-        viewModel.isLoading.observe(this) { isLoading ->
-            progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        }
-
-        viewModel.hideKeyboardEvent.observe(this) {
-            hideKeyboard()
-        }
-
-        viewModel.showToastEvent.observe(this) { message ->
-            message?.let {
-                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        viewModel.clearButtonState.observe(this) { ( _ , iconRes) ->
-            setClearButtonVisibility(iconRes)
         }
 
     }
 
-    private fun setupListeners(){
+    private fun setupListeners() {
         refreshButton.setOnClickListener {
             viewModel.performClickWithDebounce {
                 search()
@@ -195,7 +158,11 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchText = s.toString()
-                viewModel.onSearchTextChanged(searchText)
+                if (searchText.isNotBlank()) {
+                    viewModel.onSearchTextChanged(searchText)
+                } else {
+                    viewModel.loadHistory()
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -203,10 +170,9 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && searchText.isEmpty()) {
-                viewModel.updateHistoryVisibility(true)
                 viewModel.loadHistory()
             } else if (!hasFocus) {
-                viewModel.updateHistoryVisibility(false)
+                viewModel.loadHistory()
             }
         }
 
@@ -215,10 +181,8 @@ class SearchActivity : AppCompatActivity() {
                 if (event.rawX >= (inputEditText.right - inputEditText.compoundPaddingEnd)) {
                     inputEditText.setText("")
                     inputEditText.clearFocus()
-                    hideKeyboard()
-                    viewModel.updateClearButtonVisibility(false)
+                    setKeyboardVisibility(false)
                     adapter.setTracks(emptyList())
-                    viewModel.clearSearchResults()
                     viewModel.cancelSearchDebounce()
                     viewModel.loadHistory()
                     true
@@ -233,14 +197,84 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
-
     }
 
     private fun search() {
         if (inputEditText.hasFocus()) {
-            hideKeyboard()
+            setKeyboardVisibility(false)
         }
         viewModel.search(inputEditText.text.toString())
+    }
+
+    private fun showLoadingState() {
+        progressBar.visibility = View.VISIBLE
+        trackListView.visibility = View.GONE
+        placeholderMessage.visibility = View.GONE
+        placeholderImage.visibility = View.GONE
+        clearHistoryButton.visibility = View.GONE
+        historyMessage.visibility = View.GONE
+        setClearButtonVisibility(R.drawable.ic_clear_button)
+        setKeyboardVisibility(false)
+    }
+
+    private fun showLoadedState(state: SearchScreenState.Loaded) {
+        progressBar.visibility = View.GONE
+        trackListView.visibility = View.VISIBLE
+        adapter.setTracks(state.tracks)
+        setClearButtonVisibility(R.drawable.ic_clear_button)
+    }
+
+    private fun showErrorState(state: SearchScreenState.Error) {
+        progressBar.visibility = View.GONE
+        trackListView.visibility = View.GONE
+        historyMessage.visibility = View.GONE
+        placeholderMessage.visibility = View.VISIBLE
+        placeholderImage.visibility = View.VISIBLE
+
+        when (state.errorType) {
+            is SearchScreenState.ErrorType.NoNetwork -> {
+                placeholderMessage.text = getString(R.string.something_went_wrong)
+                placeholderImage.setImageResource(R.drawable.no_connection)
+            }
+            is SearchScreenState.ErrorType.NoResults -> {
+                placeholderMessage.text = getString(R.string.nothing_found)
+                placeholderImage.setImageResource(R.drawable.nothing_found)
+            }
+        }
+        setClearButtonVisibility(null)
+    }
+
+    private fun showHistoryState(state: SearchScreenState.History) {
+        progressBar.visibility = View.GONE
+        trackListView.visibility = View.VISIBLE
+        historyMessage.visibility = View.VISIBLE
+        clearHistoryButton.visibility = View.VISIBLE
+        placeholderMessage.visibility = View.GONE
+        placeholderImage.visibility = View.GONE
+        adapter.setTracks(state.tracks)
+        setClearButtonVisibility(null)
+    }
+
+    private fun showEmptyHistoryState() {
+        progressBar.visibility = View.GONE
+        trackListView.visibility = View.GONE
+        historyMessage.visibility = View.GONE
+        placeholderMessage.visibility = View.GONE
+        placeholderImage.visibility = View.GONE
+        clearHistoryButton.visibility = View.GONE
+        setClearButtonVisibility(null)
+        setKeyboardVisibility(false)
+    }
+
+    private fun showTypingState() {
+        progressBar.visibility = View.GONE
+        trackListView.visibility = View.GONE
+        historyMessage.visibility = View.GONE
+        placeholderMessage.visibility = View.GONE
+        placeholderImage.visibility = View.GONE
+        clearHistoryButton.visibility = View.GONE
+        setClearButtonVisibility(R.drawable.ic_clear_button)
+        setKeyboardVisibility(true)
     }
 
     private fun setClearButtonVisibility(iconRes: Int?) {
@@ -249,11 +283,12 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.setCompoundDrawablesWithIntrinsicBounds(searchIcon, null, clearIcon, null)
     }
 
-    private fun hideKeyboard() {
+    private fun setKeyboardVisibility(shouldShow: Boolean) {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        val view = currentFocus
-        view?.let {
-            imm.hideSoftInputFromWindow(it.windowToken, 0)
+        if (shouldShow) {
+            imm.showSoftInput(inputEditText, InputMethodManager.SHOW_IMPLICIT)
+        } else {
+            imm.hideSoftInputFromWindow(inputEditText.windowToken, 0)
         }
     }
 
@@ -272,7 +307,4 @@ class SearchActivity : AppCompatActivity() {
         super.onDestroy()
         viewModel.cancelSearchDebounce()
     }
-
 }
-
-

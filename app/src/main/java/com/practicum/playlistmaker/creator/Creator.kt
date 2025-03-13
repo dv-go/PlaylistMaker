@@ -1,36 +1,51 @@
 package com.practicum.playlistmaker.creator
 
 import android.content.Context
-import com.practicum.playlistmaker.sharing.data.SearchHistory
-import com.practicum.playlistmaker.sharing.data.repository.ThemeRepositoryImpl
+import android.media.MediaPlayer
+import com.practicum.playlistmaker.settings.data.datasource.SearchHistoryDataSource
+import com.practicum.playlistmaker.settings.data.datasource.ThemeDataSource
+import com.practicum.playlistmaker.search.data.repository.SearchHistoryRepositoryImpl
+import com.practicum.playlistmaker.settings.data.repository.ThemeRepositoryImpl
 import com.practicum.playlistmaker.search.data.repository.TracksRepositoryImpl
 import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
+import com.practicum.playlistmaker.settings.data.repository.ExternalNavigatorImpl
 import com.practicum.playlistmaker.settings.domain.api.SettingsInteractor
 import com.practicum.playlistmaker.search.domain.api.TracksInteractor
-import com.practicum.playlistmaker.search.domain.api.TracksRepository
 import com.practicum.playlistmaker.settings.domain.interactors.SettingsInteractorImpl
 import com.practicum.playlistmaker.search.domain.interactors.TracksInteractorImpl
+import com.practicum.playlistmaker.player.data.player.PlayerRepositoryImpl
+import com.practicum.playlistmaker.player.domain.interactors.PlayerInteractorImpl
+import com.practicum.playlistmaker.search.data.NetworkClient
+import com.practicum.playlistmaker.search.data.network.RetrofitClientProvider
 
 object Creator {
-    private lateinit var searchHistory: SearchHistory
-    private lateinit var appContext: Context
+    private const val SEARCH_PREFS = "search_prefs"
+    private const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
 
-    fun init(context: Context) {
-        appContext = context.applicationContext
-        val sharedPreferences = context.getSharedPreferences("search_prefs", Context.MODE_PRIVATE)
-        searchHistory = SearchHistory(sharedPreferences)
+    fun provideTracksInteractor(context: Context): TracksInteractor {
+        val retrofit = RetrofitClientProvider.provideRetrofit()
+        val networkClient: NetworkClient = RetrofitNetworkClient(retrofit)
+        val sharedPreferences = context.getSharedPreferences(SEARCH_PREFS, Context.MODE_PRIVATE)
+        val searchHistoryDataSource = SearchHistoryDataSource(sharedPreferences)
+        val searchHistory = SearchHistoryRepositoryImpl(searchHistoryDataSource)
+        val tracksRepository = TracksRepositoryImpl(networkClient)
+        return TracksInteractorImpl(tracksRepository, searchHistory)
     }
 
-    private fun getTracksRepository(): TracksRepository {
-        return TracksRepositoryImpl(RetrofitNetworkClient)
+    fun provideSettingsInteractor(context: Context): SettingsInteractor {
+        val sharedPreferences = context.getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, Context.MODE_PRIVATE)
+        val themeDataSource = ThemeDataSource(sharedPreferences)
+        val themeRepository = ThemeRepositoryImpl(themeDataSource)
+        val externalNavigator = ExternalNavigatorImpl(context.applicationContext)
+        return SettingsInteractorImpl(themeRepository, externalNavigator)
     }
 
-    fun provideTracksInteractor(): TracksInteractor {
-        return TracksInteractorImpl(getTracksRepository(), searchHistory)
-    }
-
-    fun provideSettingsInteractor(): SettingsInteractor {
-        val themeRepository = ThemeRepositoryImpl(appContext)
-        return SettingsInteractorImpl(appContext, themeRepository)
+    fun providePlayerInteractor(previewUrl: String): PlayerInteractorImpl {
+        val mediaPlayer = MediaPlayer().apply {
+            setDataSource(previewUrl)
+            prepareAsync()
+        }
+        val mediaPlayerManager = PlayerRepositoryImpl(previewUrl, mediaPlayer)
+        return PlayerInteractorImpl(mediaPlayerManager)
     }
 }

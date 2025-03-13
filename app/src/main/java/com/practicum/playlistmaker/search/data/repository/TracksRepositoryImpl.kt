@@ -9,11 +9,11 @@ import com.practicum.playlistmaker.search.domain.models.Track
 class TracksRepositoryImpl(private val networkClient: NetworkClient): TracksRepository {
     override fun search(expression: String): List<Track> {
         val response = networkClient.doRequest(TrackSearchRequest(expression))
-        if (response.resultCode == 200) {
-            return (response as TrackSearchResponse).results.map {
+        return if (response.resultCode == 200) {
+            (response as TrackSearchResponse).results.map {
                 Track(it.trackId, it.trackName, it.artistName, it.trackTimeMillis, it.artworkUrl100, it.collectionName, it.releaseDate, it.primaryGenreName, it.country, it.previewUrl) }
         } else {
-            return emptyList()
+            emptyList()
         }
     }
 }

@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.player.ui.activity.MediaActivity
 import com.practicum.playlistmaker.search.ui.activity.SearchActivity
 import com.practicum.playlistmaker.settings.ui.activity.SettingsActivity
 
@@ -24,11 +23,10 @@ class MainActivity : AppCompatActivity() {
 
         val button2ClickListener: View.OnClickListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
-                val displayIntent = Intent(this@MainActivity, MediaActivity::class.java).apply {
-                    putExtra("IS_FROM_MAIN", true)
-                }
-                startActivity(displayIntent)
-
+//                val displayIntent = Intent(this@MainActivity, MediaActivity::class.java).apply {
+//                    putExtra("IS_FROM_MAIN", true)
+//                }
+//                startActivity(displayIntent)
             }
         }
 
