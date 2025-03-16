@@ -34,7 +34,7 @@ object Creator {
 
     fun provideSettingsInteractor(context: Context): SettingsInteractor {
         val sharedPreferences = context.getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, Context.MODE_PRIVATE)
-        val themeDataSource = ThemeDataSource(sharedPreferences)
+        val themeDataSource = ThemeDataSource(sharedPreferences, context.applicationContext)
         val themeRepository = ThemeRepositoryImpl(themeDataSource)
         val externalNavigator = ExternalNavigatorImpl(context.applicationContext)
         return SettingsInteractorImpl(themeRepository, externalNavigator)

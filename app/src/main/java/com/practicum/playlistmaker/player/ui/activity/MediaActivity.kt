@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.player.ui.viewmodel.MediaViewModel
 import com.practicum.playlistmaker.player.ui.viewmodel.MediaViewModelFactory
-import com.practicum.playlistmaker.player.domain.model.MediaScreenState
+import com.practicum.playlistmaker.player.ui.presentation.MediaScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 
 class MediaActivity : AppCompatActivity() {

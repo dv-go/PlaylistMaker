@@ -1,4 +1,6 @@
-package com.practicum.playlistmaker.search.domain.models
+package com.practicum.playlistmaker.search.ui.presentation
+
+import com.practicum.playlistmaker.search.domain.models.Track
 
 sealed class SearchScreenState {
     object Loading : SearchScreenState()

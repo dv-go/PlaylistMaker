@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.search.domain.api.TracksInteractor
-import com.practicum.playlistmaker.search.domain.models.SearchScreenState
+import com.practicum.playlistmaker.search.ui.presentation.SearchScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 
 class SearchViewModel(
@@ -74,19 +74,9 @@ class SearchViewModel(
     private fun searchDebounce(query: String) {
         cancelSearchDebounce()
 
-        searchRunnable?.let { searchHandler.removeCallbacks(it) }
-
-        if (query.isBlank()) {
-            return
-        }
-
         searchRunnable = Runnable {
-            if (query == "") {
-                loadHistory()
-            } else {
                 _searchScreenState.postValue(SearchScreenState.Loading)
                 search(query)
-            }
         }
 
         searchHandler.postDelayed(searchRunnable!!, SEARCH_DEBOUNCE_DELAY)
@@ -112,12 +102,7 @@ class SearchViewModel(
     }
 
     fun onSearchTextChanged(query: String) {
-        if (query.isNotEmpty()) {
             _searchScreenState.postValue(SearchScreenState.Typing)
             searchDebounce(query)
-        } else {
-            cancelSearchDebounce()
-            loadHistory()
-        }
     }
 }

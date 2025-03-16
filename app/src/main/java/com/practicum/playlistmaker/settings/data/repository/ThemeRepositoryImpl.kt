@@ -13,11 +13,10 @@ class ThemeRepositoryImpl(
     }
 
     override fun isDarkThemeEnabled(): Boolean {
-        return themeDataSource.isDarkThemeEnabled(THEME_KEY, isSystemDarkTheme())
-    }
+        return themeDataSource.isDarkThemeEnabled()    }
 
     override fun switchTheme(isEnabled: Boolean) {
-        themeDataSource.saveThemeState(THEME_KEY, isEnabled)
+        themeDataSource.saveThemeState(isEnabled)
         AppCompatDelegate.setDefaultNightMode(
             if (isEnabled) {
                 AppCompatDelegate.MODE_NIGHT_YES
@@ -26,10 +25,4 @@ class ThemeRepositoryImpl(
             }
         )
     }
-
-    private fun isSystemDarkTheme(): Boolean {
-        val currentNightMode = AppCompatDelegate.getDefaultNightMode()
-        return currentNightMode == AppCompatDelegate.MODE_NIGHT_YES
-    }
-
 }

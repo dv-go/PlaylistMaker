@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.player.domain.interactors.PlayerInteractorImpl
-import com.practicum.playlistmaker.player.domain.model.MediaScreenState
+import com.practicum.playlistmaker.player.ui.presentation.MediaScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 
 class MediaViewModel(

@@ -22,7 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.player.ui.activity.MediaActivity
-import com.practicum.playlistmaker.search.domain.models.SearchScreenState
+import com.practicum.playlistmaker.search.ui.presentation.SearchScreenState
 import com.practicum.playlistmaker.search.ui.adapter.TracksAdapter
 import com.practicum.playlistmaker.search.ui.viewmodel.SearchViewModel
 import com.practicum.playlistmaker.search.ui.viewmodel.SearchViewModelFactory
@@ -109,48 +109,9 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        refreshButton.setOnClickListener {
-            viewModel.performClickWithDebounce {
-                search()
-            }
-        }
-
-        refreshButton.setOnTouchListener{ _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                if (inputEditText.hasFocus()) {
-                    inputEditText.clearFocus()
-                } else {
-                    inputEditText.requestFocusFromTouch()
-                    inputEditText.clearFocus()
-                }
-                refreshButton.performClick()
-                true
-            } else {
-                false
-            }
-        }
 
         toolbar.setNavigationOnClickListener {
             finish()
-        }
-
-        clearHistoryButton.setOnClickListener {
-            viewModel.clearHistory()
-        }
-
-        clearHistoryButton.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                if (inputEditText.hasFocus()) {
-                    inputEditText.clearFocus()
-                } else {
-                    inputEditText.requestFocusFromTouch()
-                    inputEditText.clearFocus()
-                }
-                clearHistoryButton.performClick()
-                true
-            } else {
-                false
-            }
         }
 
         inputEditText.addTextChangedListener(object : TextWatcher {
@@ -161,6 +122,7 @@ class SearchActivity : AppCompatActivity() {
                 if (searchText.isNotBlank()) {
                     viewModel.onSearchTextChanged(searchText)
                 } else {
+                    viewModel.cancelSearchDebounce()
                     viewModel.loadHistory()
                 }
             }
@@ -197,6 +159,47 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
+
+        clearHistoryButton.setOnClickListener {
+            viewModel.clearHistory()
+        }
+
+        clearHistoryButton.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                if (inputEditText.hasFocus()) {
+                    inputEditText.clearFocus()
+                } else {
+                    inputEditText.requestFocusFromTouch()
+                    inputEditText.clearFocus()
+                }
+                clearHistoryButton.performClick()
+                true
+            } else {
+                false
+            }
+        }
+
+        refreshButton.setOnClickListener {
+            viewModel.performClickWithDebounce {
+                search()
+            }
+        }
+
+        refreshButton.setOnTouchListener{ _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                if (inputEditText.hasFocus()) {
+                    inputEditText.clearFocus()
+                } else {
+                    inputEditText.requestFocusFromTouch()
+                    inputEditText.clearFocus()
+                }
+                refreshButton.performClick()
+                true
+            } else {
+                false
+            }
+        }
+
     }
 
     private fun search() {
@@ -213,6 +216,7 @@ class SearchActivity : AppCompatActivity() {
         placeholderImage.visibility = View.GONE
         clearHistoryButton.visibility = View.GONE
         historyMessage.visibility = View.GONE
+        refreshButton.visibility = View.GONE
         setClearButtonVisibility(R.drawable.ic_clear_button)
         setKeyboardVisibility(false)
     }
@@ -220,6 +224,7 @@ class SearchActivity : AppCompatActivity() {
     private fun showLoadedState(state: SearchScreenState.Loaded) {
         progressBar.visibility = View.GONE
         trackListView.visibility = View.VISIBLE
+        refreshButton.visibility = View.GONE
         adapter.setTracks(state.tracks)
         setClearButtonVisibility(R.drawable.ic_clear_button)
     }
@@ -235,10 +240,12 @@ class SearchActivity : AppCompatActivity() {
             is SearchScreenState.ErrorType.NoNetwork -> {
                 placeholderMessage.text = getString(R.string.something_went_wrong)
                 placeholderImage.setImageResource(R.drawable.no_connection)
+                refreshButton.visibility = View.VISIBLE
             }
             is SearchScreenState.ErrorType.NoResults -> {
                 placeholderMessage.text = getString(R.string.nothing_found)
                 placeholderImage.setImageResource(R.drawable.nothing_found)
+                refreshButton.visibility = View.GONE
             }
         }
         setClearButtonVisibility(null)
@@ -251,6 +258,7 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton.visibility = View.VISIBLE
         placeholderMessage.visibility = View.GONE
         placeholderImage.visibility = View.GONE
+        refreshButton.visibility = View.GONE
         adapter.setTracks(state.tracks)
         setClearButtonVisibility(null)
     }
@@ -262,6 +270,7 @@ class SearchActivity : AppCompatActivity() {
         placeholderMessage.visibility = View.GONE
         placeholderImage.visibility = View.GONE
         clearHistoryButton.visibility = View.GONE
+        refreshButton.visibility = View.GONE
         setClearButtonVisibility(null)
         setKeyboardVisibility(false)
     }
@@ -273,6 +282,7 @@ class SearchActivity : AppCompatActivity() {
         placeholderMessage.visibility = View.GONE
         placeholderImage.visibility = View.GONE
         clearHistoryButton.visibility = View.GONE
+        refreshButton.visibility = View.GONE
         setClearButtonVisibility(R.drawable.ic_clear_button)
         setKeyboardVisibility(true)
     }

@@ -27,11 +27,17 @@ class PlayerRepositoryImpl(
     init {
         if (previewUrl.isNotEmpty()) {
             mediaPlayer.apply {
-                setOnPreparedListener {
-                    handler.post(updateTimerRunnable)
-                }
-                setOnCompletionListener {
-                    resetPlayback()
+                try {
+                    setDataSource(previewUrl)
+                    setOnPreparedListener {
+                        handler.post(updateTimerRunnable)
+                    }
+                    setOnCompletionListener {
+                        resetPlayback()
+                    }
+                    prepareAsync()
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
         }

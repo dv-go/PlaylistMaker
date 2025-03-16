@@ -18,51 +18,89 @@ class SettingsActivity : AppCompatActivity() {
         SettingsViewModelFactory(applicationContext)
     }
 
+    private lateinit var themeSwitcher: SwitchMaterial
+    private lateinit var shareButton: TextView
+    private lateinit var supportButton: TextView
+    private lateinit var agreementButton: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val themeSwitcher = findViewById<SwitchMaterial>(R.id.switch_option)
+        initViews()
+        setupListeners()
+        setupObservers()
+    }
 
-        settingsViewModel.isDarkThemeEnabled.observe(this) { isEnabled ->
-            themeSwitcher.isChecked = isEnabled
-        }
-
-        themeSwitcher.setOnCheckedChangeListener { _, checked ->
-            settingsViewModel.switchTheme(checked)
-        }
+    private fun initViews() {
+        themeSwitcher = findViewById(R.id.switch_option)
+        shareButton = findViewById(R.id.settings_item_2)
+        supportButton = findViewById(R.id.settings_item_3)
+        agreementButton = findViewById(R.id.settings_item_4)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.setNavigationOnClickListener {
             finish()
         }
+    }
 
-        val shareButton = findViewById<TextView>(R.id.settings_item_2)
+    private fun setupListeners() {
+        themeSwitcher.setOnCheckedChangeListener { _, checked ->
+            settingsViewModel.switchTheme(checked)
+        }
+
         shareButton.setOnClickListener {
-            val shareIntent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, settingsViewModel.getShareLink())
-                type = "text/plain"
-            }
-            startActivity(shareIntent)
+            settingsViewModel.onShareButtonClicked()
         }
 
-        val supportButton = findViewById<TextView>(R.id.settings_item_3)
         supportButton.setOnClickListener {
-            val emailData = settingsViewModel.getSupportEmailData()
-            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
-                data = Uri.parse("mailto:")
-                putExtra(Intent.EXTRA_EMAIL, arrayOf(emailData.email))
-                putExtra(Intent.EXTRA_SUBJECT, emailData.subject)
-                putExtra(Intent.EXTRA_TEXT, emailData.body)
-            }
-            startActivity(emailIntent)
+            settingsViewModel.onSupportButtonClicked()
         }
 
-        val agreementButton = findViewById<TextView>(R.id.settings_item_4)
         agreementButton.setOnClickListener {
-            val userAgreementIntent = Intent(Intent.ACTION_VIEW, Uri.parse(settingsViewModel.getUserAgreementLink()))
-            startActivity(userAgreementIntent)
+            settingsViewModel.onAgreementButtonClicked()
         }
+    }
+
+    private fun setupObservers() {
+        settingsViewModel.isDarkThemeEnabled.observe(this) { isEnabled ->
+            themeSwitcher.isChecked = isEnabled
+        }
+
+        settingsViewModel.shareLink.observe(this) { link ->
+            shareText(link)
+        }
+
+        settingsViewModel.supportEmailData.observe(this) { emailData ->
+            sendEmail(emailData.email, emailData.subject, emailData.body)
+        }
+
+        settingsViewModel.userAgreementLink.observe(this) { link ->
+            openUrl(link)
+        }
+    }
+
+    private fun shareText(text: String) {
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, text)
+            type = "text/plain"
+        }
+        startActivity(shareIntent)
+    }
+
+    private fun sendEmail(email: String, subject: String, body: String) {
+        val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:")
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+            putExtra(Intent.EXTRA_SUBJECT, subject)
+            putExtra(Intent.EXTRA_TEXT, body)
+        }
+        startActivity(emailIntent)
+    }
+
+    private fun openUrl(url: String) {
+        val userAgreementIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(userAgreementIntent)
     }
 }
