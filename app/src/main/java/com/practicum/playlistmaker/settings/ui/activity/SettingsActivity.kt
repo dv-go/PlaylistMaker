@@ -11,6 +11,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.settings.ui.viewmodel.SettingsViewModel
 import com.practicum.playlistmaker.settings.ui.viewmodel.SettingsViewModelFactory
+import com.practicum.playlistmaker.settings.ui.presentation.SettingsCommand
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -67,17 +68,17 @@ class SettingsActivity : AppCompatActivity() {
             themeSwitcher.isChecked = isEnabled
         }
 
-        settingsViewModel.shareLink.observe(this) { link ->
-            shareText(link)
+        settingsViewModel.command.observe(this) { command ->
+            when (command) {
+                is SettingsCommand.Share -> shareText(command.link)
+                is SettingsCommand.SendEmail -> {
+                    val data = command.emailData
+                    sendEmail(data.email, data.subject, data.body)
+                }
+                is SettingsCommand.OpenUrl -> openUrl(command.url)
+            }
         }
 
-        settingsViewModel.supportEmailData.observe(this) { emailData ->
-            sendEmail(emailData.email, emailData.subject, emailData.body)
-        }
-
-        settingsViewModel.userAgreementLink.observe(this) { link ->
-            openUrl(link)
-        }
     }
 
     private fun shareText(text: String) {

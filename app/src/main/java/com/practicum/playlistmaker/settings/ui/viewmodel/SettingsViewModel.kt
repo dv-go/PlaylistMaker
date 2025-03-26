@@ -5,20 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.settings.data.dto.SupportEmailData
 import com.practicum.playlistmaker.settings.domain.api.SettingsInteractor
+import com.practicum.playlistmaker.settings.ui.presentation.SettingsCommand
 
 class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : ViewModel() {
 
+    private val _command = MutableLiveData<SettingsCommand>()
+    val command: LiveData<SettingsCommand> = _command
+
     private val _isDarkThemeEnabled = MutableLiveData<Boolean>()
     val isDarkThemeEnabled: LiveData<Boolean> get() = _isDarkThemeEnabled
-
-    private val _shareLink = MutableLiveData<String>()
-    val shareLink: LiveData<String> get() = _shareLink
-
-    private val _supportEmailData = MutableLiveData<SupportEmailData>()
-    val supportEmailData: LiveData<SupportEmailData> get() = _supportEmailData
-
-    private val _userAgreementLink = MutableLiveData<String>()
-    val userAgreementLink: LiveData<String> get() = _userAgreementLink
 
     init {
         loadInitialData()
@@ -34,14 +29,15 @@ class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : Vi
     }
 
     fun onShareButtonClicked() {
-        _shareLink.value = settingsInteractor.getShareLink()
+        _command.value = SettingsCommand.Share(settingsInteractor.getShareLink())
     }
 
     fun onSupportButtonClicked() {
-        _supportEmailData.value = settingsInteractor.getSupportEmailData()
+        _command.value = SettingsCommand.SendEmail(settingsInteractor.getSupportEmailData())
     }
 
     fun onAgreementButtonClicked() {
-        _userAgreementLink.value = settingsInteractor.getUserAgreementLink()
+        _command.value = SettingsCommand.OpenUrl(settingsInteractor.getUserAgreementLink())
     }
+
 }
