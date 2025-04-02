@@ -6,10 +6,8 @@ import com.practicum.playlistmaker.search.data.dto.TrackSearchRequest
 import retrofit2.Retrofit
 
 class RetrofitNetworkClient(
-    retrofit: Retrofit
+    private val trackService: ITunesSearchAPI
 ) : NetworkClient {
-
-    private val trackService = retrofit.create(ITunesSearchAPI::class.java)
 
     override fun doRequest(dto: Any): Response {
         return if (dto is TrackSearchRequest) {

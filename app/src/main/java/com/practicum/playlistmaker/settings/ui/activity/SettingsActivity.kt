@@ -4,20 +4,17 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.settings.ui.viewmodel.SettingsViewModel
-import com.practicum.playlistmaker.settings.ui.viewmodel.SettingsViewModelFactory
 import com.practicum.playlistmaker.settings.ui.presentation.SettingsCommand
+import com.practicum.playlistmaker.settings.ui.viewmodel.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
-    private val settingsViewModel: SettingsViewModel by viewModels {
-        SettingsViewModelFactory(applicationContext)
-    }
+    private val settingsViewModel: SettingsViewModel by viewModel()
 
     private lateinit var themeSwitcher: SwitchMaterial
     private lateinit var shareButton: TextView

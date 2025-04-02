@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.search.domain.interactors
 
-import com.practicum.playlistmaker.search.data.repository.SearchHistoryRepositoryImpl
+import com.practicum.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.practicum.playlistmaker.search.domain.api.TracksInteractor
 import com.practicum.playlistmaker.search.domain.api.TracksRepository
 import com.practicum.playlistmaker.search.domain.models.Track
@@ -11,9 +11,9 @@ import java.util.concurrent.Executors
 
 class TracksInteractorImpl(
     private val repository: TracksRepository,
-    private val searchHistory: SearchHistoryRepositoryImpl
-) : TracksInteractor {
-
+    private val searchHistory: SearchHistoryRepository
+) : TracksInteractor
+{
     private val executor = Executors.newCachedThreadPool()
 
     override fun searchTracks(expression: String, consumer: TracksInteractor.TracksConsumer) {

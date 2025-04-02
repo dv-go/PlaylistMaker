@@ -3,15 +3,15 @@ package com.practicum.playlistmaker.player.ui.activity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.player.ui.viewmodel.MediaViewModel
-import com.practicum.playlistmaker.player.ui.viewmodel.MediaViewModelFactory
 import com.practicum.playlistmaker.player.ui.presentation.MediaScreenState
+import com.practicum.playlistmaker.player.ui.viewmodel.MediaViewModel
 import com.practicum.playlistmaker.search.domain.models.Track
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class MediaActivity : AppCompatActivity() {
 
@@ -19,10 +19,8 @@ class MediaActivity : AppCompatActivity() {
     private lateinit var timerTextView: TextView
     private lateinit var track: Track
 
-    private val mediaViewModel: MediaViewModel by viewModels {
-        val track = intent.getSerializableExtra("TRACK") as? Track
-            ?: throw IllegalArgumentException("Track is missing in Intent")
-        MediaViewModelFactory(track)
+    private val mediaViewModel: MediaViewModel by viewModel {
+        parametersOf(track)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +34,7 @@ class MediaActivity : AppCompatActivity() {
 
         track = savedInstanceState?.getSerializable("TRACK") as? Track
             ?: intent.getSerializableExtra("TRACK") as? Track
-                    ?: throw IllegalArgumentException("Track is missing in savedInstanceState and Intent")
+                    ?: throw IllegalArgumentException("Track is missing in Intent")
 
         setupObservers()
         setupPlayButton()
@@ -58,11 +56,9 @@ class MediaActivity : AppCompatActivity() {
         }
     }
 
-    private fun showLoading() {
-    }
+    private fun showLoading() {}
 
-    private fun showError() {
-    }
+    private fun showError() {}
 
     private fun showContent(state: MediaScreenState.Content) {
         with(state) {
