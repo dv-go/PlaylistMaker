@@ -3,7 +3,6 @@ package com.practicum.playlistmaker.settings.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.practicum.playlistmaker.settings.data.dto.SupportEmailData
 import com.practicum.playlistmaker.settings.domain.api.SettingsInteractor
 import com.practicum.playlistmaker.settings.ui.presentation.SettingsCommand
 

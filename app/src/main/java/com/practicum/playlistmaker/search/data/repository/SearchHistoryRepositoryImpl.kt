@@ -1,19 +1,19 @@
 package com.practicum.playlistmaker.search.data.repository
 
-import com.google.gson.Gson
+import com.practicum.playlistmaker.search.data.datasource.SearchHistoryDataSource
 import com.practicum.playlistmaker.search.data.dto.SearchHistoryDto
 import com.practicum.playlistmaker.search.data.dto.toDto
-import com.practicum.playlistmaker.search.domain.models.Track
-import com.practicum.playlistmaker.settings.data.datasource.SearchHistoryDataSource
 import com.practicum.playlistmaker.search.domain.api.SearchHistoryRepository
+import com.practicum.playlistmaker.search.domain.models.Track
 
 class SearchHistoryRepositoryImpl(
-    private val searchHistoryDataSource: SearchHistoryDataSource
+    private val searchHistoryDataSource: SearchHistoryDataSource,
+    private val dto: SearchHistoryDto
 ) : SearchHistoryRepository {
+
 
     private val HISTORY_KEY = "search_history"
     private val MAX_HISTORY_SIZE = 10
-    private val dto = SearchHistoryDto(Gson())
 
     override fun getHistory(): List<Track> {
         val historyJson = searchHistoryDataSource.getHistoryJson(HISTORY_KEY)

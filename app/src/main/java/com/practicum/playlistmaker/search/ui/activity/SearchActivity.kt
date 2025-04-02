@@ -15,17 +15,16 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.player.ui.activity.MediaActivity
-import com.practicum.playlistmaker.search.ui.presentation.SearchScreenState
 import com.practicum.playlistmaker.search.ui.adapter.TracksAdapter
+import com.practicum.playlistmaker.search.ui.presentation.SearchScreenState
 import com.practicum.playlistmaker.search.ui.viewmodel.SearchViewModel
-import com.practicum.playlistmaker.search.ui.viewmodel.SearchViewModelFactory
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
@@ -45,9 +44,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var historyMessage: TextView
     private lateinit var progressBar: ProgressBar
 
-    private val viewModel: SearchViewModel by viewModels {
-        SearchViewModelFactory(applicationContext)
-    }
+    private val viewModel: SearchViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
