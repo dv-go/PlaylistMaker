@@ -85,6 +85,13 @@
         <item name="cornerSize">8dp</item>
     </style>
 
+    <style name="TabTextStyle" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/default_text_size_14</item>
+    </style>
+
+
     <color name="search_refresh_button_textcolor">#FFFFFF</color>
     <color name="search_refresh_button_background">#1A1B22</color>
 </resources>

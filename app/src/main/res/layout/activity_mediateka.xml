@@ -1,0 +1,33 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/settings_screen_background_color"
+    android:orientation="vertical">
+
+    <!-- Toolbar Заголовок -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/mediateka_head_string"
+        app:navigationIcon="@drawable/ic_arrowleft"
+        style="@style/ToolbarStyle" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/settings_screen_background_color"
+        app:tabTextColor="@color/settings_content_color"
+        app:tabIndicatorColor="@color/settings_content_color"
+        app:tabTextAppearance="@style/TabTextStyle"
+        />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

@@ -19,10 +19,13 @@
             android:name=".search.ui.activity.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".player.ui.activity.MediaActivity"
+            android:name=".player.ui.activity.PlayerActivity"
             android:exported="false" />
         <activity
             android:name=".settings.ui.activity.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mediateka.ui.activity.MediatekaActivity"
             android:exported="false" />
         <activity
             android:name=".main.ui.MainActivity"
