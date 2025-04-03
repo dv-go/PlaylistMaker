@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.search.ui.activity.SearchActivity
 import com.practicum.playlistmaker.settings.ui.activity.SettingsActivity
+import com.practicum.playlistmaker.mediateka.ui.activity.MediatekaActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,10 +24,8 @@ class MainActivity : AppCompatActivity() {
 
         val button2ClickListener: View.OnClickListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
-//                val displayIntent = Intent(this@MainActivity, MediaActivity::class.java).apply {
-//                    putExtra("IS_FROM_MAIN", true)
-//                }
-//                startActivity(displayIntent)
+                val displayIntent = Intent(this@MainActivity, MediatekaActivity::class.java)
+                startActivity(displayIntent)
             }
         }
 

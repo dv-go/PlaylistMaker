@@ -5,16 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.player.domain.interactors.PlayerInteractorImpl
-import com.practicum.playlistmaker.player.ui.presentation.MediaScreenState
+import com.practicum.playlistmaker.player.ui.presentation.PlayerScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 
-class MediaViewModel(
+class PlayerViewModel(
     private val playerInteractor: PlayerInteractorImpl,
     private val track: Track
 ) : ViewModel() {
 
-    private val _screenState = MutableLiveData<MediaScreenState>()
-    val screenState: LiveData<MediaScreenState> get() = _screenState
+    private val _screenState = MutableLiveData<PlayerScreenState>()
+    val screenState: LiveData<PlayerScreenState> get() = _screenState
 
     init {
         loadTrackData()
@@ -29,7 +29,7 @@ class MediaViewModel(
     }
 
     private fun loadTrackData() {
-        _screenState.value = MediaScreenState.Content(
+        _screenState.value = PlayerScreenState.Content(
             track = track,
             currentTime = "0:00",
             playButtonIcon = R.drawable.ic_play_button,
@@ -64,7 +64,7 @@ class MediaViewModel(
         playButtonIcon: Int? = null
     ) {
         val currentState = _screenState.value
-        if (currentState is MediaScreenState.Content) {
+        if (currentState is PlayerScreenState.Content) {
             _screenState.value = currentState.copy(
                 currentTime = currentTime ?: currentState.currentTime,
                 playButtonIcon = playButtonIcon ?: currentState.playButtonIcon

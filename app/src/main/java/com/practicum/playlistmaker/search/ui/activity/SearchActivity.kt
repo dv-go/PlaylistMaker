@@ -20,7 +20,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.player.ui.activity.MediaActivity
+import com.practicum.playlistmaker.player.ui.activity.PlayerActivity
 import com.practicum.playlistmaker.search.ui.adapter.TracksAdapter
 import com.practicum.playlistmaker.search.ui.presentation.SearchScreenState
 import com.practicum.playlistmaker.search.ui.viewmodel.SearchViewModel
@@ -95,7 +95,7 @@ class SearchActivity : AppCompatActivity() {
                 val bundle = Bundle().apply {
                     putSerializable("TRACK", track)
                 }
-                val intent = Intent(this, MediaActivity::class.java).apply {
+                val intent = Intent(this, PlayerActivity::class.java).apply {
                     putExtras(bundle)
                 }
                 startActivity(intent)

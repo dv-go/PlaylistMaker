@@ -24,7 +24,8 @@ class App : Application() {
                 PlayerUiModule,
                 SettingsDataModule,
                 SettingsDomainModule,
-                SettingsUiModule
+                SettingsUiModule,
+                mediatekaUIModule
             )
         }
 

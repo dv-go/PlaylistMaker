@@ -2,9 +2,9 @@ package com.practicum.playlistmaker.player.ui.presentation
 
 import com.practicum.playlistmaker.search.domain.models.Track
 
-sealed class MediaScreenState {
-    object Loading : MediaScreenState()
-    data class Error(val message: String) : MediaScreenState()
+sealed class PlayerScreenState {
+    object Loading : PlayerScreenState()
+    data class Error(val message: String) : PlayerScreenState()
     data class Content(
         val track: Track,
         val currentTime: String,
@@ -13,5 +13,5 @@ sealed class MediaScreenState {
         val genre: String,
         val country: String,
         val artworkUrl: String
-    ) : MediaScreenState()
+    ) : PlayerScreenState()
 }
