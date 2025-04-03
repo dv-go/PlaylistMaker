@@ -3,6 +3,7 @@ package com.practicum.playlistmaker.mediateka.ui.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayoutMediator
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityMediatekaBinding
 import com.practicum.playlistmaker.mediateka.ui.adapter.MediatekaViewPagerAdapter
 
@@ -20,7 +21,10 @@ class MediatekaActivity : AppCompatActivity() {
             lifecycle
         )
 
-        val tabTitles = listOf("Избранные треки", "Плейлисты")
+        val tabTitles = listOf(
+            getString(R.string.tab_title_favorites),
+            getString(R.string.tab_title_playlists)
+        )
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = tabTitles[position]

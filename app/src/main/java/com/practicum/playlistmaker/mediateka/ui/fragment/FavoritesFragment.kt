@@ -11,12 +11,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoritesFragment : Fragment() {
 
-    companion object {
-        fun newInstance(): FavoritesFragment {
-            return FavoritesFragment()
-        }
-    }
-
     private val viewModel: FavoritesViewModel by viewModel()
 
     private var _binding: FragmentFavoritesBinding? = null
@@ -33,5 +27,11 @@ class FavoritesFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        fun newInstance(): FavoritesFragment {
+            return FavoritesFragment()
+        }
     }
 }

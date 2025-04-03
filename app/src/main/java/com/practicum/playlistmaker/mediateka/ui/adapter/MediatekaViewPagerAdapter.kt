@@ -18,8 +18,7 @@ class MediatekaViewPagerAdapter(
         return when (position) {
             0 -> FavoritesFragment.newInstance()
             1 -> PlaylistsFragment.newInstance()
-            else -> throw IllegalArgumentException("Invalid position: $position")
+            else -> PlaylistsFragment.newInstance()
         }
     }
-
 }

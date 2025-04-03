@@ -25,7 +25,7 @@ class App : Application() {
                 SettingsDataModule,
                 SettingsDomainModule,
                 SettingsUiModule,
-                mediatekaUIModule
+                MediatekaUIModule
             )
         }
 

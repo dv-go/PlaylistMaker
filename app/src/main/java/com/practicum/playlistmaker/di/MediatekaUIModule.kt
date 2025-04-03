@@ -5,7 +5,7 @@ import com.practicum.playlistmaker.mediateka.ui.viewmodel.PlaylistsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val mediatekaUIModule = module {
+val MediatekaUIModule = module {
 
     viewModel { FavoritesViewModel() }
 
