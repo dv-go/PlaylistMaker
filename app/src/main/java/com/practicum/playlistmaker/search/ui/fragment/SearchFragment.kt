@@ -44,7 +44,7 @@ class SearchFragment : Fragment() {
         binding.recyclerView.adapter = adapter
 
         if (savedInstanceState != null) {
-            searchText = savedInstanceState.getString("SEARCH_TEXT", "")
+            searchText = savedInstanceState.getString(SEARCH_TEXT_KEY, "")
             binding.searchEditText.setText(searchText)
         }
 
@@ -216,7 +216,7 @@ class SearchFragment : Fragment() {
         viewModel.navigateToMediaActivity.observe(viewLifecycleOwner) { track ->
             track?.let {
                 val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
-                    putExtra("TRACK", track)
+                    putExtra(TRACK_KEY, track)
                 }
                 startActivity(intent)
                 viewModel.onNavigatedToPlayer()
@@ -248,7 +248,7 @@ class SearchFragment : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString("SEARCH_TEXT", searchText)
+        outState.putString(SEARCH_TEXT_KEY, searchText)
         super.onSaveInstanceState(outState)
     }
 
@@ -256,4 +256,10 @@ class SearchFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    companion object {
+        private const val SEARCH_TEXT_KEY = "SEARCH_TEXT"
+        private const val TRACK_KEY = "TRACK"
+    }
+
 }

@@ -19,7 +19,7 @@ class MediatekaFragment : Fragment() {
     private var _binding: FragmentMediatekaBinding? = null
     private val binding get() = _binding!!
 
-    private val tabTitles by lazy {
+    private val tabTitles by lazy(LazyThreadSafetyMode.NONE) {
         listOf(
             getString(R.string.tab_title_favorites),
             getString(R.string.tab_title_playlists)
