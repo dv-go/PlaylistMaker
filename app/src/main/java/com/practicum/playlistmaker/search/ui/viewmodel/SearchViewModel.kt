@@ -97,6 +97,11 @@ class SearchViewModel(
         }
     }
 
+    fun onNavigatedToPlayer() {
+        _navigateToMediaActivity.value = null
+    }
+
+
     fun cancelSearchDebounce() {
         searchRunnable?.let { searchHandler.removeCallbacks(it) }
     }

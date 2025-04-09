@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/searchFragment"
+        android:icon="@drawable/ic_search_loup"
+        android:title="Поиск" />
+    <item
+        android:id="@+id/mediatekaFragment"
+        android:icon="@drawable/ic_light_mode"
+        android:title="Медиатека" />
+    <item
+        android:id="@+id/settingsFragment"
+        android:icon="@drawable/ic_settings"
+        android:title="Настройки" />
+</menu>
