@@ -1,71 +1,63 @@
-package com.practicum.playlistmaker.settings.ui.activity
+package com.practicum.playlistmaker.settings.ui.fragment
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import com.google.android.material.switchmaterial.SwitchMaterial
-import com.practicum.playlistmaker.R
+import android.view.*
+import androidx.fragment.app.Fragment
+import com.practicum.playlistmaker.databinding.FragmentSettingsBinding
 import com.practicum.playlistmaker.settings.ui.presentation.SettingsCommand
 import com.practicum.playlistmaker.settings.ui.viewmodel.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsFragment : Fragment() {
+
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
 
     private val settingsViewModel: SettingsViewModel by viewModel()
 
-    private lateinit var themeSwitcher: SwitchMaterial
-    private lateinit var shareButton: TextView
-    private lateinit var supportButton: TextView
-    private lateinit var agreementButton: TextView
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
-
-        initViews()
-        setupListeners()
-        setupObservers()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    private fun initViews() {
-        themeSwitcher = findViewById(R.id.switch_option)
-        shareButton = findViewById(R.id.settings_item_2)
-        supportButton = findViewById(R.id.settings_item_3)
-        agreementButton = findViewById(R.id.settings_item_4)
-
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        toolbar.setNavigationOnClickListener {
-            finish()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setupListeners()
+        setupObservers()
+        binding.toolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
 
-    private fun setupListeners() {
-        themeSwitcher.setOnCheckedChangeListener { _, checked ->
+    private fun setupListeners() = with(binding) {
+        switchOption.setOnCheckedChangeListener { _, checked ->
             settingsViewModel.switchTheme(checked)
         }
 
-        shareButton.setOnClickListener {
+        settingsItem2.setOnClickListener {
             settingsViewModel.onShareButtonClicked()
         }
 
-        supportButton.setOnClickListener {
+        settingsItem3.setOnClickListener {
             settingsViewModel.onSupportButtonClicked()
         }
 
-        agreementButton.setOnClickListener {
+        settingsItem4.setOnClickListener {
             settingsViewModel.onAgreementButtonClicked()
         }
     }
 
     private fun setupObservers() {
-        settingsViewModel.isDarkThemeEnabled.observe(this) { isEnabled ->
-            themeSwitcher.isChecked = isEnabled
+        settingsViewModel.isDarkThemeEnabled.observe(viewLifecycleOwner) { isEnabled ->
+            binding.switchOption.isChecked = isEnabled
         }
 
-        settingsViewModel.command.observe(this) { command ->
+        settingsViewModel.command.observe(viewLifecycleOwner) { command ->
             when (command) {
                 is SettingsCommand.Share -> shareText(command.link)
                 is SettingsCommand.SendEmail -> {
@@ -75,7 +67,6 @@ class SettingsActivity : AppCompatActivity() {
                 is SettingsCommand.OpenUrl -> openUrl(command.url)
             }
         }
-
     }
 
     private fun shareText(text: String) {
@@ -100,5 +91,10 @@ class SettingsActivity : AppCompatActivity() {
     private fun openUrl(url: String) {
         val userAgreementIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         startActivity(userAgreementIntent)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

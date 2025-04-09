@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title="@string/mediateka_head_string"
-        app:navigationIcon="@drawable/ic_arrowleft"
         style="@style/ToolbarStyle" />
 
     <com.google.android.material.tabs.TabLayout
